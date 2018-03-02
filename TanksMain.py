@@ -2,7 +2,7 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 # Frame dimensions
 WIDTH = 1200
-HEIGHT = 800
+HEIGHT = 750
 
 class Interaction:
 
