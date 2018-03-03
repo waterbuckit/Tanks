@@ -18,7 +18,7 @@ class Interaction:
         self.player.draw(canvas)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        pass
+        self.player.turret.updateRotation(position)
     # Method for handling key down
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)

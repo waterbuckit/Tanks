@@ -102,7 +102,8 @@ class PlayerTurret:
     def updateRotation(self, clickedPos):
         xLength = clickedPos[0] - self.pos.x
         yLength = clickedPos[1] - self.pos.y
-        angle = math.degrees(math.atan2(yLength, xLength))
+        # theta = tan^-1(opp/adj) SOHCAHTOA :^)
+        angle = math.degrees(math.atan(yLength/xLength))
         print(angle)
         difference = self.rotation - angle
         print(difference)
