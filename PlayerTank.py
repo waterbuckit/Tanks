@@ -15,11 +15,12 @@ class PlayerTank:
         self.health = 100.0
         self.velocity = Vector(0,0)
         self.generator = Vector(-self.width, -self.height)
+        self.projectileSpeed = 3
         #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
-        targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize() * 3
-        shot = Projectile(self.pos, targetVel)
+        targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
+        shot = Projectile(self.pos, targetVel, self.projectileSpeed)
         return shot
 
     def terminalVelocity(self):
