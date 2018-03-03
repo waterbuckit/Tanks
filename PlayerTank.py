@@ -1,5 +1,6 @@
 from Vector import Vector
 from Line import Line
+from Projectile import Projectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
@@ -17,7 +18,9 @@ class PlayerTank:
         #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
-        pass
+        targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize() * 3
+        shot = Projectile(self.pos, targetVel)
+        return shot
 
     def terminalVelocity(self):
         return (self.velocity.length() >= 1.5)
@@ -67,11 +70,9 @@ class PlayerTank:
         #gen.rotate(180)
         #self.backPoint = Vector(self.pos.x, self.pos.y) + gen
         #self.mesh.update()
-    
     def draw(self, canvas):
         for line in self.lines:
             line.draw(canvas)
-        
         # draw player health
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
@@ -109,7 +110,7 @@ class PlayerTurret:
         print("DIFFERENCE: " + str(difference))
         self.rotation += difference
         self.generator.rotate(difference)
-
+	
     def update(self):
         gen = self.generator.copy()
         #  is a square primitive, we need the vertices

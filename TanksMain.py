@@ -11,14 +11,18 @@ class Interaction:
     def __init__(self, keyboard):
        self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
        self.keyboard = keyboard
-
+       self.projectiles = []
     # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right)
         self.player.draw(canvas)
+        for p in self.projectiles:
+            p.draw(canvas)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
         self.player.turret.updateRotation(position)
+        shot = self.player.shoot(position)
+        self.projectiles.append(shot)
     # Method for handling key down
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
