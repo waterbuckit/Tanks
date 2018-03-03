@@ -1,4 +1,5 @@
 from Vector import Vector
+from Line import Line
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 class PlayerTank:
@@ -6,19 +7,19 @@ class PlayerTank:
     def __init__(self, pos):
         self.rotation = 0
         self.width = 20
-        self.height = 40 
+        self.height = 20
         #self.turret = PlayerTurret(pos)
         self.pos = pos
         self.health = 100.0
         self.velocity = Vector(0,0)
-        self.generator = Vector(0, -self.height/2)
+        self.generator = Vector(-self.width, -self.height)
         #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
         pass
 
     def terminalVelocity(self):
-        return (self.velocity.length == 5)
+        return (self.velocity.length() >= 1.5)
 
     def updateVelocityForwards(self):
         if(not self.terminalVelocity()):
@@ -50,16 +51,34 @@ class PlayerTank:
         self.velocity.multiply(0.85)
         # For representing the front of the tank
         gen = self.generator.copy()
-        self.frontPoint = Vector(self.pos.x, self.pos.y) + gen
+        # Tank is a square primitive, we need the vertices
+        self.mesh = list() 
+        for i in range(4):
+            self.mesh.append(self.pos + gen)
+            gen.rotate(90)
+        # compute the lines
+        self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
+                       for i in range(len(self.mesh)) ]
+        
+        #self.frontPoint = Vector(self.pos.x, self.pos.y) + gen
         # For representing the back of the tank
-        gen.rotate(180)
-        self.backPoint = Vector(self.pos.x, self.pos.y) + gen
+        #gen.rotate(180)
+        #self.backPoint = Vector(self.pos.x, self.pos.y) + gen
         #self.mesh.update()
-
+    
     def draw(self, canvas):
+        for line in self.lines:
+            line.draw(canvas)
+        
+        # draw player health
+        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
+        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+
+        #line = Line(self.pos, self.pos + self.generator)
+        #line.draw(canvas)
         #self.mesh.draw(canvas)
         # Temporarily use a line to represent the current rotation
-        canvas.draw_line((self.frontPoint.x, self.frontPoint.y), (self.backPoint.x, self.backPoint.y), 12, 'Red')
+        #canvas.draw_line((self.frontPoint.x, self.frontPoint.y), (self.backPoint.x, self.backPoint.y), 12, 'Red')
 
 class PlayerTurret:
     
