@@ -8,7 +8,7 @@ class PlayerTank:
         self.rotation = 0
         self.width = 20
         self.height = 20
-        #self.turret = PlayerTurret(pos)
+        self.turret = PlayerTurret(pos)
         self.pos = pos
         self.health = 100.0
         self.velocity = Vector(0,0)
@@ -48,6 +48,7 @@ class PlayerTank:
         if(right):
             self.updateRotationLeft()
         self.pos.add(self.velocity)
+        self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
         # For representing the front of the tank
         gen = self.generator.copy()
@@ -59,7 +60,7 @@ class PlayerTank:
         # compute the lines
         self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
                        for i in range(len(self.mesh)) ]
-        
+        self.turret.update()
         #self.frontPoint = Vector(self.pos.x, self.pos.y) + gen
         # For representing the back of the tank
         #gen.rotate(180)
@@ -73,6 +74,7 @@ class PlayerTank:
         # draw player health
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+        self.turret.draw(canvas)
 
         #line = Line(self.pos, self.pos + self.generator)
         #line.draw(canvas)
@@ -87,7 +89,23 @@ class PlayerTurret:
         self.height = 10
         self.pos = pos
         self.rotation = 0
+        self.generator = Vector(-self.width, -self.height)
         # self.mesh = Mesh(self.width, self.height, self.pos)
     
+    def setPos(self, pos):
+        self.pos = pos
+
+    def update(self):
+        gen = self.generator.copy()
+        #  is a square primitive, we need the vertices
+        self.mesh = list() 
+        for i in range(4):
+            self.mesh.append(self.pos + gen)
+            gen.rotate(90)
+        # compute the lines
+        self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
+                       for i in range(len(self.mesh)) ]
+    
     def draw(self, canvas):
-        pass
+        for line in self.lines:
+            line.draw(canvas)
