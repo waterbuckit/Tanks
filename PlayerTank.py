@@ -1,5 +1,6 @@
 from Vector import Vector
 from Line import Line
+import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 class PlayerTank:
@@ -94,6 +95,19 @@ class PlayerTurret:
     
     def setPos(self, pos):
         self.pos = pos
+
+    def getRotation(self):
+        return self.rotation
+    # this is broken :~;
+    def updateRotation(self, clickedPos):
+        xLength = clickedPos[0] - self.pos.x
+        yLength = clickedPos[1] - self.pos.y
+        angle = math.degrees(math.atan2(yLength, xLength))
+        print(angle)
+        difference = self.rotation - angle
+        print(difference)
+        self.rotation += difference
+        self.generator.rotate(difference)
 
     def update(self):
         gen = self.generator.copy()
