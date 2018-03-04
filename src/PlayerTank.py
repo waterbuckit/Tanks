@@ -93,7 +93,7 @@ class PlayerTank:
         # draw cursor image
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
-        self.drawReloadStatus(canvas, self.mousePos, 20)
+        self.drawReloadStatus(canvas, self.mousePos, 200)
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
@@ -101,8 +101,11 @@ class PlayerTank:
         angle = (self.counter/120) * 360
         print(angle)
         for i in range(int(angle)):
-            canvas.draw_point((mousePos[0]+(radius*math.cos(i)),mousePos[1]+(radius*math.sin(i))), 'Green')
-
+            canvas.draw_point((mousePos[0]+(radius*math.cos(i*math.pi/180)),mousePos[1]+(radius*math.sin(i*math.pi/180))), 'Green')
+        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.1)),mousePos[1]+(radius*math.sin(0.1))), 'Green')
+        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.2)),mousePos[1]+(radius*math.sin(0.2))), 'Green')
+        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.3)),mousePos[1]+(radius*math.sin(0.3))), 'Green')
+            #print("Drawing point " + str(i) + " at " + str(mousePos[0]+(radius*math.cos(i))) + ", " + str(mousePos[1]+(radius*math.cos(i))))
 class PlayerTurret:
     
     def __init__(self, pos):
