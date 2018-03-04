@@ -18,10 +18,16 @@ class PlayerTank:
         self.projectileSpeed = 3
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
+        self.readyToFire = True
+        self.counter = 120
         
     def shoot(self, clickedPos):
+        if(not self.readyToFire):
+            return
         targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
         shot = Projectile(self.pos, targetVel, self.projectileSpeed)
+        self.readyToFire = False
+        self.counter = 0
         return shot
 
     def terminalVelocity(self):
@@ -54,6 +60,11 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
+        if(not self.readyToFire and self.counter < 120):
+            self.counter += 1
+            print(self.counter)
+        else:
+            self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
@@ -69,15 +80,28 @@ class PlayerTank:
         self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
                        for i in range(len(self.mesh)) ]
         self.turret.update(mousePos)
+
     def draw(self, canvas):
         for line in self.lines:
             line.draw(canvas)
         # draw player health
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+
+        # draw shot trajectory
         canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
+        # draw cursor image
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
+        self.drawReloadStatus(canvas, self.mousePos, 20)
+    
+    # draws the status of the reload as a proportion in a circle
+    def drawReloadStatus(self, canvas, mousePos, radius):
+        # get the counter as a proportion of 360
+        angle = (self.counter/120) * 360
+        print(angle)
+        for i in range(int(angle)):
+            canvas.draw_point((mousePos[0]+(radius*math.cos(i)),mousePos[1]+(radius*math.sin(i))), 'Green')
 
 class PlayerTurret:
     

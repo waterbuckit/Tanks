@@ -18,10 +18,11 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.player.draw(canvas)
         for p in self.projectiles:
-            if p.isWithinRange():
-                p.draw(canvas)
-            else:
-                self.projectiles.remove(p)
+            if p is not None:
+                if p.isWithinRange():
+                    p.draw(canvas)
+                else:
+                    self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
         shot = self.player.shoot(position)
