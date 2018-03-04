@@ -16,6 +16,7 @@ class PlayerTank:
         self.velocity = Vector(0,0)
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 3
+        self.mousePos = (0,0)
         #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
@@ -57,6 +58,7 @@ class PlayerTank:
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
+        self.mousePos = mousePos
         # For representing the front of the tank
         gen = self.generator.copy()
         # Tank is a square primitive, we need the vertices
@@ -77,8 +79,9 @@ class PlayerTank:
         for line in self.lines:
             line.draw(canvas)
         # draw player health
-        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
-        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+        #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
+        #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+        canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
         self.turret.draw(canvas)
 
         #line = Line(self.pos, self.pos + self.generator)
