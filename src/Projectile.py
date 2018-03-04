@@ -2,7 +2,7 @@ import math
 class Projectile:
     def __init__(self, pos, vel, speed, rng=500, rad=3, damage=0):
         self.pos = pos
-        self.vel = vel * speed # Multiplying normalized vel by scalar to implement varying projectile speeds
+        self.vel = vel * speed
         self.damage = damage
         self.rad = rad
         self.range = rng
@@ -13,7 +13,7 @@ class Projectile:
     def isWithinRange(self):
         return self.travelled < self.range
     def update(self):
-        hyp = math.sqrt(abs(self.vel.x**2) + abs(self.vel.y**2))
+        hyp = self.vel.length()
         self.travelled += hyp
         self.rad -= self.rad / (self.range / hyp)
         self.pos += self.vel

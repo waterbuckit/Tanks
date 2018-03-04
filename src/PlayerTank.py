@@ -72,7 +72,7 @@ class PlayerTank:
         # For representing the front of the tank
         gen = self.generator.copy()
         # Tank is a square primitive, we need the vertices
-        self.mesh = list() 
+        self.mesh = list()
         for i in range(4):
             self.mesh.append(self.pos + gen)
             gen.rotate(90)
