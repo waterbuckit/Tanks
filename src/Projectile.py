@@ -31,12 +31,13 @@ class Trail:
     def populateTrail(self,pos,rad):
         for i in range(10):
             self.trailCircles.append(TrailCircle(pos,rad))
-        self.trailCircles.reverse()
  
     def update(self, pos, rad):
+        # Ensure that the first element of the trail is at the position of the projectile
         firstElement = self.trailCircles[0].update(pos, rad)
+        # Update this element with the position of the element i-1 in the array
         for i in range(1,len(self.trailCircles)):
-            self.trailCircles[i].update(self.trailCircles[i-1].getPos(), (rad/i)*3)
+            self.trailCircles[i].update(self.trailCircles[i-1].getPos(), (rad/i)*3) 
 
     def draw(self, canvas):
         for i in self.trailCircles:

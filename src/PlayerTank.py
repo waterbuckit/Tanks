@@ -18,7 +18,6 @@ class PlayerTank:
         self.projectileSpeed = 3
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
-        #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
         targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
@@ -70,26 +69,15 @@ class PlayerTank:
         self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
                        for i in range(len(self.mesh)) ]
         self.turret.update(mousePos)
-        #self.frontPoint = Vector(self.pos.x, self.pos.y) + gen
-        # For representing the back of the tank
-        #gen.rotate(180)
-        #self.backPoint = Vector(self.pos.x, self.pos.y) + gen
-        #self.mesh.update()
     def draw(self, canvas):
         for line in self.lines:
             line.draw(canvas)
         # draw player health
-        #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
-        #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
+        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
         canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
-
-        #line = Line(self.pos, self.pos + self.generator)
-        #line.draw(canvas)
-        #self.mesh.draw(canvas)
-        # Temporarily use a line to represent the current rotation
-        #canvas.draw_line((self.frontPoint.x, self.frontPoint.y), (self.backPoint.x, self.backPoint.y), 12, 'Red')
 
 class PlayerTurret:
     
@@ -100,14 +88,13 @@ class PlayerTurret:
         self.rotation = 0
         self.sides = 4
         self.generator = Vector(-self.width, -self.height)
-        # self.mesh = Mesh(self.width, self.height, self.pos)
     
     def setPos(self, pos):
         self.pos = pos
 
     def getRotation(self):
         return self.rotation
-    # this is broken :~;
+
     def updateRotation(self, newPos):
         xLength = newPos[0] - self.pos.x
         yLength = newPos[1] - self.pos.y
