@@ -1,9 +1,7 @@
 ░▀█▀░█▀█░█▀█░█░█░█▀▀
-
 ░░█░░█▀█░█░█░█▀▄░▀▀█
-
 ░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀
-
+---
 ## Tasks:
 #### Player character control
 	- Base of the tank
