@@ -17,7 +17,11 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right)
         self.player.draw(canvas)
         for p in self.projectiles:
-            p.draw(canvas)
+            if p.isWithinRange():
+                print(p.rad)
+                p.draw(canvas)
+            else:
+                self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
         self.player.turret.updateRotation(position)

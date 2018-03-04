@@ -92,6 +92,7 @@ class PlayerTurret:
         self.height = 10
         self.pos = pos
         self.rotation = 0
+        self.sides = 4
         self.generator = Vector(-self.width, -self.height)
         # self.mesh = Mesh(self.width, self.height, self.pos)
     
@@ -106,9 +107,7 @@ class PlayerTurret:
         yLength = clickedPos[1] - self.pos.y
         # theta = tan^-1(opp/adj) SOHCAHTOA :^)
         angle = math.degrees(math.atan(yLength/xLength))
-        print("ANGLE: " + str(angle))
         difference = angle - self.rotation
-        print("DIFFERENCE: " + str(difference))
         self.rotation += difference
         self.generator.rotate(difference)
 	
@@ -116,16 +115,15 @@ class PlayerTurret:
         gen = self.generator.copy()
         #  is a square primitive, we need the vertices
         self.mesh = list() 
-        for i in range(4):
+        for i in range(self.sides):
             self.mesh.append(self.pos + gen)
-            gen.rotate(90)
-        # compute the lines
+            gen.rotate(360/self.sides)
+	# compute the lines
         self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
                        for i in range(len(self.mesh)) ]
     
     def draw(self, canvas):
         for line in self.lines:
             line.draw(canvas)
-         
         line = Line(self.pos, self.pos + self.generator)
         line.draw(canvas)
