@@ -17,6 +17,7 @@ class PlayerTank:
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 3
         self.mousePos = (0,0)
+        self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         #self.mesh = Mesh(self.width, self.height, self.pos)
         
     def shoot(self, clickedPos):
@@ -81,6 +82,7 @@ class PlayerTank:
         #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
         #canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
         canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
+        canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
 
         #line = Line(self.pos, self.pos + self.generator)

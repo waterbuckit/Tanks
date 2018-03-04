@@ -14,6 +14,7 @@ class Interaction:
        self.projectiles = []
     # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
+        simplegui.pygame.mouse.set_visible(False)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.player.draw(canvas)
         for p in self.projectiles:
