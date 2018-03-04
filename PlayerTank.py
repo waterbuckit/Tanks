@@ -106,7 +106,7 @@ class PlayerTurret:
         xLength = newPos[0] - self.pos.x
         yLength = newPos[1] - self.pos.y
         # theta = tan^-1(opp/adj) SOHCAHTOA :^)
-        angle = math.degrees(math.atan(yLength/xLength))
+        angle = math.degrees(math.atan2(yLength,xLength))
         difference = angle - self.rotation
         self.rotation += difference
         self.generator.rotate(difference)
@@ -126,5 +126,5 @@ class PlayerTurret:
     def draw(self, canvas):
         for line in self.lines:
             line.draw(canvas)
-        line = Line(self.pos, self.pos + self.generator)
+        line = Line(self.pos, self.pos + self.generator.copy().rotate(135))
         line.draw(canvas)
