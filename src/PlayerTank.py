@@ -6,7 +6,6 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 class PlayerTank:
     
-
     def __init__(self, pos):
         self.rotation = 0
         self.width = 20
@@ -20,9 +19,8 @@ class PlayerTank:
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
-        self.interval = 120 
-        self.counter = self.interval 
-
+        self.counter = 120
+        
     def shoot(self, clickedPos):
         if(not self.readyToFire):
             return
@@ -62,8 +60,9 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        if(not self.readyToFire and self.counter < self.interval):
+        if(not self.readyToFire and self.counter < 120):
             self.counter += 1
+            print(self.counter)
         else:
             self.readyToFire = True
         self.pos.add(self.velocity)
@@ -94,12 +93,13 @@ class PlayerTank:
         # draw cursor image
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
-        self.drawReloadStatus(canvas, self.mousePos, 200)
+        self.drawReloadStatus(canvas, self.mousePos, 20)
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
         # get the counter as a proportion of 360
-        angle = (self.counter/self.interval) * 360
+        angle = (self.counter/120) * 360
+        print(angle)
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(i*math.pi/180)),mousePos[1]+(radius*math.sin(i*math.pi/180))), 'Green')
         #canvas.draw_point((mousePos[0]+(radius*math.cos(0.1)),mousePos[1]+(radius*math.sin(0.1))), 'Green')
