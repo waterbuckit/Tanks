@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python TanksMain.py --no-controlpanel
+python ./src/TanksMain.py --no-controlpanel

@@ -24,7 +24,7 @@ class PlayerTank:
         return shot
 
     def terminalVelocity(self):
-        return (self.velocity.length() >= 1.5)
+        return (math.fabs(self.velocity.length()) >= 1.4)
 
     def updateVelocityForwards(self):
         if(not self.terminalVelocity()):
@@ -32,6 +32,7 @@ class PlayerTank:
             self.velocity.add(Vector(0,-0.7).rotate(self.rotation))
     
     def updateVelocityBackwards(self):
+        if(not self.terminalVelocity()):    
             # the velocity added must be rotated to ensure it is in the correct direction
             self.velocity.add(Vector(0,0.7).rotate(self.rotation))
 
@@ -52,6 +53,7 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
+        print(self.velocity.length())
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
