@@ -43,7 +43,7 @@ class PlayerTank:
         self.generator.rotate(1)
         self.rotation += 1
 
-    def update(self, forwards, backwards, left, right):
+    def update(self, forwards, backwards, left, right, mousePos):
         if(forwards):
             self.updateVelocityForwards()
         if(backwards):
@@ -65,7 +65,7 @@ class PlayerTank:
         # compute the lines
         self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
                        for i in range(len(self.mesh)) ]
-        self.turret.update()
+        self.turret.update(mousePos)
         #self.frontPoint = Vector(self.pos.x, self.pos.y) + gen
         # For representing the back of the tank
         #gen.rotate(180)
@@ -102,16 +102,17 @@ class PlayerTurret:
     def getRotation(self):
         return self.rotation
     # this is broken :~;
-    def updateRotation(self, clickedPos):
-        xLength = clickedPos[0] - self.pos.x
-        yLength = clickedPos[1] - self.pos.y
+    def updateRotation(self, newPos):
+        xLength = newPos[0] - self.pos.x
+        yLength = newPos[1] - self.pos.y
         # theta = tan^-1(opp/adj) SOHCAHTOA :^)
         angle = math.degrees(math.atan(yLength/xLength))
         difference = angle - self.rotation
         self.rotation += difference
         self.generator.rotate(difference)
 	
-    def update(self):
+    def update(self, mousePos):
+        self.updateRotation(mousePos)
         gen = self.generator.copy()
         #  is a square primitive, we need the vertices
         self.mesh = list() 

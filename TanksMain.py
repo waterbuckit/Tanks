@@ -14,17 +14,16 @@ class Interaction:
        self.projectiles = []
     # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
-        self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right)
+        self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.player.draw(canvas)
         for p in self.projectiles:
             if p.isWithinRange():
-                print(p.rad)
                 p.draw(canvas)
             else:
                 self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        self.player.turret.updateRotation(position)
+        #self.player.turret.updateRotation(position)
         shot = self.player.shoot(position)
         self.projectiles.append(shot)
     # Method for handling key down
