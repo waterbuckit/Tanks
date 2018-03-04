@@ -23,7 +23,6 @@ class Interaction:
                 self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        #self.player.turret.updateRotation(position)
         shot = self.player.shoot(position)
         self.projectiles.append(shot)
     # Method for handling key down
