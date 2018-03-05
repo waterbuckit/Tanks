@@ -1,5 +1,5 @@
 from Vector import Vector
-from Line import *
+from Line import Line
 from Projectile import Projectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
@@ -22,9 +22,9 @@ class PlayerTank:
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
         self.counter = 120
-        self.trackMarksLeft = []
-        self.trackMarksRight = []
-        
+        self.trackCount = 0
+        self.trackMarks = []
+
     def shoot(self, clickedPos):
         if(not self.readyToFire):
             return
@@ -41,11 +41,13 @@ class PlayerTank:
         if(not self.terminalVelocity()):
             # the velocity added must be rotated to ensure it is in the correct direction
             self.velocity.add(Vector(0,-0.7).rotate(self.rotation))
+            self.trackCount += 1
     
     def updateVelocityBackwards(self):
         if(not self.terminalVelocity()):    
             # the velocity added must be rotated to ensure it is in the correct direction
             self.velocity.add(Vector(0,0.7).rotate(self.rotation))
+            self.trackCount += 1
 
     def updateRotationRight(self):
         self.generator.rotate(-1)
@@ -80,15 +82,25 @@ class PlayerTank:
             self.mesh.append((self.pos + gen).getP())
             gen.rotate(90)
         self.turret.update(mousePos)
-        self.updateTrackMarks()
+        if(self.trackCount % 3 == 0):
+            self.updateTrackMarks(self.generator.copy(),self.mesh[2], self.mesh[3])
    
-    def updateTrackMarks(self):
-        pass
+    def updateTrackMarks(self, gen, leftVectorPos, rightVectorPos):
+        gen.rotate(135).divide(4)
+        left = Vector(leftVectorPos[0], leftVectorPos[1])
+        print(str(left))
+        right = Vector(rightVectorPos[0], leftVectorPos[1])
+        print(str(right))
+        self.trackMarks.append((Line(
+            left, left + gen),
+            Line(right, right - gen)))
     
-    def drawTrackMark(self, canvas):
-        pass
-
+    def drawTrackMarks(self, canvas):
+        for trackMark1, trackMark2 in self.trackMarks:
+            trackMark1.draw(canvas)
+            trackMark2.draw(canvas)
     def draw(self, canvas):
+        self.drawTrackMarks(canvas)
         canvas.draw_polygon(self.mesh,3,'White','Black') 
         # draw player health
         canvas.draw_line(
@@ -99,8 +111,7 @@ class PlayerTank:
                 (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 20), 3, 'Green')
 
         # draw shot trajectory
-        #canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
-        aimingLine = DottedLine(self.pos, Vector(self.mousePos[0], self.mousePos[1])).draw(canvas)
+        canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
         # draw cursor image
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), 
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
