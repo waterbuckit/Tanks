@@ -14,8 +14,8 @@ class Projectile:
         return self.travelled < self.range
     def update(self):
         hyp = self.vel.length()
-        self.travelled += hyp
-        self.rad -= self.rad / (self.range / hyp)
+        #self.travelled += hyp
+        #self.rad -= self.rad / (self.range / hyp)
         self.pos += self.vel
         self.trail.update(self.pos, self.rad)
     def draw(self, canvas):
