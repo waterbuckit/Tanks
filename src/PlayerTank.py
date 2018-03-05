@@ -92,13 +92,14 @@ class PlayerTank:
         right = Vector(rightVectorPos[0], leftVectorPos[1])
         print(str(right))
         self.trackMarks.append((Line(
-            left, left + gen),
-            Line(right, right - gen)))
+            left, left - gen),
+            Line(right, right + gen)))
     
     def drawTrackMarks(self, canvas):
         for trackMark1, trackMark2 in self.trackMarks:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
+
     def draw(self, canvas):
         self.drawTrackMarks(canvas)
         canvas.draw_polygon(self.mesh,3,'White','Black') 
