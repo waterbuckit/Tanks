@@ -82,7 +82,7 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        else:
+        if(self.readyToFire or not self.counter < self.interval):
             self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
