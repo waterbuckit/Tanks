@@ -12,14 +12,17 @@ class Interaction:
        self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
        self.keyboard = keyboard
        self.projectiles = []
-    # Method for handling drawing all objects in the scene
-    def drawHandler(self, canvas):
+
+    def update(self):
         pressed = simplegui.pygame.mouse.get_pressed()
         if pressed[2] == 1:
             shot = self.player.shootMg(simplegui.pygame.mouse.get_pos())
             self.projectiles.append(shot)
-        simplegui.pygame.mouse.set_visible(False)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
+
+    # Method for handling drawing all objects in the scene
+    def drawHandler(self, canvas):
+        self.update()
         self.player.draw(canvas)
         for p in self.projectiles:
             if p is not None:
@@ -27,6 +30,7 @@ class Interaction:
                     p.draw(canvas)
                 else:
                     self.projectiles.remove(p)
+
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
         shot = self.player.shoot(position)
@@ -65,6 +69,7 @@ class Keyboard:
             self.right = False
 
 i = Interaction(Keyboard())
+simplegui.pygame.mouse.set_visible(False)
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)

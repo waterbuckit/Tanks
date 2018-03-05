@@ -19,7 +19,7 @@ class PlayerTank:
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 7
         self.mousePos = (0,0)
-        self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
+        self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.readyToFire = True
         self.interval = 120
         self.counter = self.interval
@@ -41,7 +41,7 @@ class PlayerTank:
     def shootMg(self, clickedPos):
         if self.counter % 10 == 0:
             targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-            shot = Projectile(self.pos, targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2, 'Yellow')
+            shot = Projectile(self.pos, targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2)
             return shot
         return
 
@@ -138,7 +138,7 @@ class PlayerTank:
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), 
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
-        self.drawReloadStatus(canvas, self.mousePos, 20)
+        self.drawReloadStatus(canvas, self.mousePos, 9)
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
@@ -146,7 +146,7 @@ class PlayerTank:
         angle = (self.counter/self.interval) * 360
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
-                mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
+                mousePos[1]+(radius*math.sin(math.radians(i)))), 'White')
 
 class PlayerTurret:
     

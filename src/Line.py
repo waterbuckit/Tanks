@@ -13,7 +13,7 @@ class Line:
         self.saturation = 0.0
         self.brightness = 100
         self.alpha = 1.0
-        self.color = '#FFFFFF'
+        self.color = color
     def increaseAlpha(self):
         self.alpha -= 0.02
         if(not self.alpha <= 0):
@@ -37,3 +37,4 @@ class DottedLine:
         for i in range(self.interval):
             if (i % 5 == 0):
                 canvas.draw_line((self.pA+(newVel*i)).getP(), (self.pA+(newVel*(i+1))).getP(), self.thickness, color)
+             
