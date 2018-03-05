@@ -27,10 +27,11 @@ class PlayerTank:
         self.trackMarks = []
 
     def shoot(self, clickedPos):
-        if(not self.readyToFire):
+        clickedVel = Vector(clickedPos[0], clickedPos[1])
+        if(not self.readyToFire) or (self.pos - clickedVel).length() < self.generator.length():
             return
-        targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-        shot = Projectile(self.pos, targetVel, self.projectileSpeed, (self.pos-Vector(clickedPos[0], clickedPos[1])).length())
+        targetVel = (clickedVel-self.pos.copy()).normalize()
+        shot = Projectile(self.pos, targetVel, self.projectileSpeed, (self.pos-clickedVel).length())
         self.readyToFire = False
         self.counter = 0
         self.recoil(shot)
@@ -38,9 +39,11 @@ class PlayerTank:
 
     #May or may not use
     def shootMg(self, clickedPos):
-       targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-       shot = Projectile(self.pos-(self.generator.copy()/3), targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2, 'Yellow')
-       return shot       
+        if self.counter % 10 == 0:
+            targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
+            shot = Projectile(self.pos-(self.generator.copy()/3), targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2, 'Yellow')
+            return shot
+        return
 
     def recoil(self, shot):
         vel = (shot.vel.copy().normalize())*-1
@@ -70,6 +73,7 @@ class PlayerTank:
         self.rotation += 1
 
     def update(self, forwards, backwards, left, right, mousePos):
+        self.counter += 1
         if(forwards):
             self.updateVelocityForwards()
         if(backwards):
@@ -78,8 +82,6 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        if(not self.readyToFire and self.counter < self.interval):
-            self.counter += 1
         else:
             self.readyToFire = True
         self.pos.add(self.velocity)

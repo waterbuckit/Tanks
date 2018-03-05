@@ -14,6 +14,10 @@ class Interaction:
        self.projectiles = []
     # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
+        pressed = simplegui.pygame.mouse.get_pressed()
+        if pressed[2] == 1:
+            shot = self.player.shootMg(simplegui.pygame.mouse.get_pos())
+            self.projectiles.append(shot)
         simplegui.pygame.mouse.set_visible(False)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.player.draw(canvas)
@@ -25,12 +29,8 @@ class Interaction:
                     self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        pressed = simplegui.pygame.mouse.get_pressed()
-        print(str(pressed))
         shot = self.player.shoot(position)
-        shotmg = self.player.shootMg(position)
         self.projectiles.append(shot)
-        self.projectiles.append(shotmg)
     # Method for handling key down
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
