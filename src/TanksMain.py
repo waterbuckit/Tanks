@@ -25,6 +25,8 @@ class Interaction:
                     self.projectiles.remove(p)
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
+        pressed = simplegui.pygame.mouse.get_pressed()
+        print(str(pressed))
         shot = self.player.shoot(position)
         self.projectiles.append(shot)
     # Method for handling key down

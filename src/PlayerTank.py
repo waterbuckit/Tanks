@@ -89,9 +89,7 @@ class PlayerTank:
     def updateTrackMarks(self, gen, leftVectorPos, rightVectorPos):
         gen.rotate(135).divide(4)
         left = Vector(leftVectorPos[0], leftVectorPos[1])
-        print(str(left))
         right = Vector(rightVectorPos[0], rightVectorPos[1])
-        print(str(right))
         self.trackMarks.append((Line(
             left, left - gen),
             Line(right, right + gen)))
@@ -101,21 +99,12 @@ class PlayerTank:
                 if(trackMark1.alpha <= 0 or trackMark2.alpha <= 0):
                     self.trackMarks.remove((trackMark1,trackMark2))
                     continue
-                print(str(trackMark1.alpha))
                 trackMark1.increaseAlpha()
                 trackMark2.increaseAlpha()
     
     def drawTrackMarks(self, canvas):
         
         for trackMark1, trackMark2 in self.trackMarks:
-            #canvas.draw_point(trackMark1, 'White')
-            #canvas.draw_point(trackMark2, 'White')
-        #canvas.draw_circle(trackMark1,3,1,'Yellow','Yellow')
-        #canvas.draw_circle(trackMark2,3,1,'Red','Red')
-
-        #canvas.draw_text(str(trackMark1), (1,8), 18, 'Yellow',font_face='serif', _font_size_coef=0.75)
-        #canvas.draw_text(str(trackMark2), (1,20), 18, 'Red', font_face='serif', _font_size_coef=0.75)
-            
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
 
@@ -124,11 +113,11 @@ class PlayerTank:
         canvas.draw_polygon(self.mesh,3,'White','Black') 
         # draw player health
         canvas.draw_line(
-                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
-                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 25), 
+                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 25), 3, 'Red')
         canvas.draw_line(
-                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
-                (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 20), 3, 'Green')
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 25), 
+                (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 25), 3, 'Green')
         # draw shot trajectory
         aimingLine = DottedLine(self.pos, Vector(self.mousePos[0], self.mousePos[1])).draw(canvas)
 
@@ -137,7 +126,6 @@ class PlayerTank:
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
         self.drawReloadStatus(canvas, self.mousePos, 20)
-        canvas.draw_line((self.pos.x, self.pos.y),(self.pos.x + self.generator.x, self.pos.y + self.generator.y), 3, 'Blue')
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
