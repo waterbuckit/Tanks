@@ -1,17 +1,17 @@
 from Vector import Vector
 
 class Line:
-    def __init__(self, point1, point2, dotted=False):
+    def __init__(self, point1, point2, color='White'):
         self.pA = point1
         self.pB = point2
         self.length = (self.pA - self.pB).length()
         self.thickness = 3
         self.unit = (self.pB - self.pA).normalize()
         self.normal = self.unit.copy().rotateAnti()
-        self.dotted = dotted
+        self.color = color
 
     def draw(self, canvas):
-        canvas.draw_line(self.pA.getP(), self.pB.getP(), self.thickness, 'White')
+        canvas.draw_line(self.pA.getP(), self.pB.getP(), self.thickness, self.color)
 
 class DottedLine:
     def __init__(self, point1, point2, interval=100):
