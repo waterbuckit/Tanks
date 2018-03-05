@@ -17,7 +17,7 @@ class PlayerTank:
         self.velocity = Vector(0,0)
 
         self.generator = Vector(-self.width, -self.height)
-        self.projectileSpeed = 3
+        self.projectileSpeed = 7
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
@@ -30,7 +30,7 @@ class PlayerTank:
         if(not self.readyToFire):
             return
         targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-        shot = Projectile(self.pos, targetVel, self.projectileSpeed)
+        shot = Projectile(self.pos, targetVel, self.projectileSpeed, (self.pos-Vector(clickedPos[0], clickedPos[1])).length())
         self.readyToFire = False
         self.counter = 0
         return shot
