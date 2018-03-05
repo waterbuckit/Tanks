@@ -3,7 +3,7 @@ from Line import *
 from Projectile import Projectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-
+import copy
 class PlayerTank:
     
     def __init__(self, pos):
@@ -21,7 +21,8 @@ class PlayerTank:
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
-        self.counter = 120
+        self.interval = 120
+        self.counter = self.interval
         self.trackCount = 0
         self.trackMarks = []
 
@@ -66,7 +67,7 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        if(not self.readyToFire and self.counter < 120):
+        if(not self.readyToFire and self.counter < self.interval):
             self.counter += 1
         else:
             self.readyToFire = True
@@ -91,10 +92,18 @@ class PlayerTank:
         print(str(left))
         right = Vector(rightVectorPos[0], rightVectorPos[1])
         print(str(right))
-        #self.trackMarks.append((left.getP(),right.getP()))
         self.trackMarks.append((Line(
             left, left - gen),
             Line(right, right + gen)))
+        trackMarksCopy = copy.copy(self.trackMarks)
+        if(not len(self.trackMarks) == 0):
+            for trackMark1, trackMark2 in trackMarksCopy:
+                if(trackMark1.alpha <= 0 or trackMark2.alpha <= 0):
+                    self.trackMarks.remove((trackMark1,trackMark2))
+                    continue
+                print(str(trackMark1.alpha))
+                trackMark1.increaseAlpha()
+                trackMark2.increaseAlpha()
     
     def drawTrackMarks(self, canvas):
         
@@ -106,6 +115,7 @@ class PlayerTank:
 
         #canvas.draw_text(str(trackMark1), (1,8), 18, 'Yellow',font_face='serif', _font_size_coef=0.75)
         #canvas.draw_text(str(trackMark2), (1,20), 18, 'Red', font_face='serif', _font_size_coef=0.75)
+            
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
 
@@ -132,7 +142,7 @@ class PlayerTank:
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
         # get the counter as a proportion of 360
-        angle = (self.counter/120) * 360
+        angle = (self.counter/self.interval) * 360
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
                 mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
