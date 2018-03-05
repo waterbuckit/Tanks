@@ -13,7 +13,9 @@ class PlayerTank:
         self.turret = PlayerTurret(pos)
         self.pos = pos
         self.health = 100.0
+        
         self.velocity = Vector(0,0)
+
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 3
         self.mousePos = (0,0)
@@ -62,9 +64,9 @@ class PlayerTank:
             self.updateRotationLeft()
         if(not self.readyToFire and self.counter < 120):
             self.counter += 1
-            print(self.counter)
         else:
             self.readyToFire = True
+
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
@@ -85,13 +87,18 @@ class PlayerTank:
         for line in self.lines:
             line.draw(canvas)
         # draw player health
-        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
-        canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
+        canvas.draw_line(
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
+                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Red')
+        canvas.draw_line(
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
+                (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 20), 3, 'Green')
 
         # draw shot trajectory
         canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
         # draw cursor image
-        canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
+        canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), 
+                (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
         self.drawReloadStatus(canvas, self.mousePos, 20)
     
@@ -99,9 +106,10 @@ class PlayerTank:
     def drawReloadStatus(self, canvas, mousePos, radius):
         # get the counter as a proportion of 360
         angle = (self.counter/120) * 360
-        print(angle)
         for i in range(int(angle)):
-            canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
+            canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
+                mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
+
 
 class PlayerTurret:
     
