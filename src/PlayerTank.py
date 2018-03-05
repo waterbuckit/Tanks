@@ -35,6 +35,12 @@ class PlayerTank:
         self.counter = 0
         return shot
 
+    #May or may not use
+    def shootMg(self, clickedPos):
+       targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
+       shot = Projectile(self.pos-(self.generator.copy()/3), targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2, 'Yellow')
+       return shot       
+
     def terminalVelocity(self):
         return (math.fabs(self.velocity.length()) >= 1.4)
 

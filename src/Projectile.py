@@ -1,13 +1,14 @@
 import math
 class Projectile:
-    def __init__(self, pos, vel, speed, rng=500, rad=3, damage=0):
+    def __init__(self, pos, vel, speed, rng=500, isTrailed=True, rad=3, color='White'):
         self.pos = pos
         self.vel = vel * speed
-        self.damage = damage
         self.rad = rad
         self.range = rng
         self.travelled = 0
+        self.isTrailed = isTrailed
         self.trail = Trail(pos, rad)
+        self.color = color         
     def getVel(self):
         return self.vel.getP()
     def isWithinRange(self):
@@ -20,8 +21,9 @@ class Projectile:
         self.trail.update(self.pos, self.rad)
     def draw(self, canvas):
         self.update()
-        canvas.draw_circle(self.pos.getP(), self.rad, 1,'White', 'White')
-        self.trail.draw(canvas)
+        canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
+        if self.isTrailed:
+            self.trail.draw(canvas)
 
 class Trail:
     def __init__(self, pos, rad):

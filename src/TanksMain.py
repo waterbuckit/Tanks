@@ -28,7 +28,9 @@ class Interaction:
         pressed = simplegui.pygame.mouse.get_pressed()
         print(str(pressed))
         shot = self.player.shoot(position)
+        shotmg = self.player.shootMg(position)
         self.projectiles.append(shot)
+        self.projectiles.append(shotmg)
     # Method for handling key down
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
