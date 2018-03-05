@@ -101,11 +101,8 @@ class PlayerTank:
         angle = (self.counter/120) * 360
         print(angle)
         for i in range(int(angle)):
-            canvas.draw_point((mousePos[0]+(radius*math.cos(i*math.pi/180)),mousePos[1]+(radius*math.sin(i*math.pi/180))), 'Green')
-        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.1)),mousePos[1]+(radius*math.sin(0.1))), 'Green')
-        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.2)),mousePos[1]+(radius*math.sin(0.2))), 'Green')
-        #canvas.draw_point((mousePos[0]+(radius*math.cos(0.3)),mousePos[1]+(radius*math.sin(0.3))), 'Green')
-            #print("Drawing point " + str(i) + " at " + str(mousePos[0]+(radius*math.cos(i))) + ", " + str(mousePos[1]+(radius*math.cos(i))))
+            canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
+
 class PlayerTurret:
     
     def __init__(self, pos):
