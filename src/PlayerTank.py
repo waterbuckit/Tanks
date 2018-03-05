@@ -1,5 +1,5 @@
 from Vector import Vector
-from Line import Line
+from Line import *
 from Projectile import Projectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
@@ -89,7 +89,8 @@ class PlayerTank:
         canvas.draw_line((self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), (self.pos.x + ((self.health/100)*self.width/2), self.pos.y + (self.height/2) + 20), 3, 'Green')
 
         # draw shot trajectory
-        canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
+        #canvas.draw_line(self.pos.getP(), self.mousePos, 3, '#101010')
+        aimingLine = DottedLine(self.pos, Vector(self.mousePos[0], self.mousePos[1])).draw(canvas)
         # draw cursor image
         canvas.draw_image(self.cursor, (self.cursor.get_width()/2, self.cursor.get_height()/2), (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
