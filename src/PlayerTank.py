@@ -33,6 +33,7 @@ class PlayerTank:
         shot = Projectile(self.pos, targetVel, self.projectileSpeed, (self.pos-Vector(clickedPos[0], clickedPos[1])).length())
         self.readyToFire = False
         self.counter = 0
+        self.recoil(shot)
         return shot
 
     #May or may not use
@@ -40,6 +41,10 @@ class PlayerTank:
        targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
        shot = Projectile(self.pos-(self.generator.copy()/3), targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2, 'Yellow')
        return shot       
+
+    def recoil(self, shot):
+        vel = (shot.vel.copy().normalize())*-1
+        self.velocity.add(vel)
 
     def terminalVelocity(self):
         return (math.fabs(self.velocity.length()) >= 1.4)
