@@ -17,7 +17,7 @@ class PlayerTank:
         self.velocity = Vector(0,0)
 
         self.generator = Vector(-self.width, -self.height)
-        self.projectileSpeed = 10
+        self.projectileSpeed = 3
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
@@ -121,7 +121,7 @@ class PlayerTank:
 
     def draw(self, canvas):
         self.drawTrackMarks(canvas)
-        canvas.draw_polygon(self.mesh,3,'#2A2E12','#4B5320') 
+        canvas.draw_polygon(self.mesh,3,'White','Black') 
         # draw player health
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
@@ -137,7 +137,7 @@ class PlayerTank:
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
         self.drawReloadStatus(canvas, self.mousePos, 20)
-        #canvas.draw_line((self.pos.x, self.pos.y),(self.pos.x + self.generator.x, self.pos.y + self.generator.y), 3, 'Blue')
+        canvas.draw_line((self.pos.x, self.pos.y),(self.pos.x + self.generator.x, self.pos.y + self.generator.y), 3, 'Blue')
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
@@ -182,6 +182,6 @@ class PlayerTurret:
             gen.rotate(360/self.sides)
     
     def draw(self, canvas):
-        canvas.draw_polygon(self.mesh,3,'#2A2E12','#4B5320')  
-        line = Line(self.pos, self.pos + self.generator.copy().rotate(135), '#2A2E12')
+        canvas.draw_polygon(self.mesh,3,'White','Black')  
+        line = Line(self.pos, self.pos + self.generator.copy().rotate(135))
         line.draw(canvas)

@@ -57,4 +57,4 @@ class TrailCircle:
         self.pos += (otherPos - self.pos).multiply(0.5)
 
     def draw(self, canvas):
-        canvas.draw_circle((self.pos.x, self.pos.y), self.rad, 1, 'Red')
+        canvas.draw_circle((self.pos.x, self.pos.y), self.rad, 1, 'Red', 'Orange')
