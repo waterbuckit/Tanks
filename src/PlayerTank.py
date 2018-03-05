@@ -1,5 +1,5 @@
 from Vector import Vector
-from Line import Line
+from Line import *
 from Projectile import Projectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
