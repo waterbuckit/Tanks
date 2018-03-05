@@ -22,6 +22,8 @@ class PlayerTank:
         self.cursor = simplegui.load_image('http://weclipart.com/gimg/19457DF12FD54154/1024px-Crosshairs_Red.svg.png')
         self.readyToFire = True
         self.counter = 120
+        self.trackMarksLeft = []
+        self.trackMarksRight = []
         
     def shoot(self, clickedPos):
         if(not self.readyToFire):
@@ -66,7 +68,6 @@ class PlayerTank:
             self.counter += 1
         else:
             self.readyToFire = True
-
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
         self.velocity.multiply(0.85)
@@ -76,16 +77,19 @@ class PlayerTank:
         # Tank is a square primitive, we need the vertices
         self.mesh = list()
         for i in range(4):
-            self.mesh.append(self.pos + gen)
+            self.mesh.append((self.pos + gen).getP())
             gen.rotate(90)
-        # compute the lines
-        self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
-                       for i in range(len(self.mesh)) ]
         self.turret.update(mousePos)
+        self.updateTrackMarks()
+   
+    def updateTrackMarks(self):
+        pass
+    
+    def drawTrackMark(self, canvas):
+        pass
 
     def draw(self, canvas):
-        for line in self.lines:
-            line.draw(canvas)
+        canvas.draw_polygon(self.mesh,3,'White','Black') 
         # draw player health
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 20), 
@@ -109,7 +113,6 @@ class PlayerTank:
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
                 mousePos[1]+(radius*math.sin(math.radians(i)))), 'Green')
-
 
 class PlayerTurret:
     
@@ -142,14 +145,10 @@ class PlayerTurret:
         #  is a square primitive, we need the vertices
         self.mesh = list() 
         for i in range(self.sides):
-            self.mesh.append(self.pos + gen)
+            self.mesh.append((self.pos + gen).getP())
             gen.rotate(360/self.sides)
-	# compute the lines
-        self.lines = [ Line(self.mesh[i], self.mesh[(i + 1) % len(self.mesh)])
-                       for i in range(len(self.mesh)) ]
     
     def draw(self, canvas):
-        for line in self.lines:
-            line.draw(canvas)
+        canvas.draw_polygon(self.mesh,3,'White','Black')  
         line = Line(self.pos, self.pos + self.generator.copy().rotate(135))
         line.draw(canvas)
