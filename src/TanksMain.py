@@ -1,6 +1,7 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from PlayerTank import PlayerTank
+from Explosion import Explosion
 
 # Frame dimensions
 WIDTH = 1200
@@ -12,8 +13,11 @@ class Interaction:
        self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
        self.keyboard = keyboard
        self.projectiles = []
-
+       self.explosions = []
+    
     def update(self):
+        for explosion in self.explosions:
+            explosion.update()
         pressed = simplegui.pygame.mouse.get_pressed()
         if pressed[2] == 1:
             shot = self.player.shootMg(simplegui.pygame.mouse.get_pos())
@@ -29,7 +33,16 @@ class Interaction:
                 if p.isWithinRange():
                     p.draw(canvas)
                 else:
+                    self.explosions.append(Explosion(p.pos))
+                    print("Appended explosion")
                     self.projectiles.remove(p)
+        for explosion in self.explosions:
+            if explosion is not None:
+                if(explosion.isFinished()):
+                    print("removed")
+                    self.explosions.remove(explosion)
+                    continue
+                explosion.draw(canvas)
 
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):

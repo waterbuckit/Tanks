@@ -57,12 +57,14 @@ class PlayerTank:
             # the velocity added must be rotated to ensure it is in the correct direction
             self.velocity.add(Vector(0,-0.7).rotate(self.rotation))
             self.trackCount += 1
+            self.trackCount %= 3
     
     def updateVelocityBackwards(self):
         if(not self.terminalVelocity()):    
             # the velocity added must be rotated to ensure it is in the correct direction
             self.velocity.add(Vector(0,0.7).rotate(self.rotation))
             self.trackCount += 1
+            self.trackCount %= 3
 
     def updateRotationRight(self):
         self.generator.rotate(-1)
