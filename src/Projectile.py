@@ -1,6 +1,7 @@
 import math
 class Projectile:
-    def __init__(self, pos, vel, speed, rng=500, isTrailed=True, rad=3, color='White'):
+    def __init__(self, pos, vel, speed, projType, rng=500, isTrailed=True, rad=3, color='White'):
+        self.projType = projType
         self.pos = pos
         self.vel = vel * speed
         self.rad = rad
@@ -24,7 +25,8 @@ class Projectile:
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
-
+    def getType(self):
+        return self.projType
 class Trail:
     def __init__(self, pos, rad):
         self.trailCircles = []

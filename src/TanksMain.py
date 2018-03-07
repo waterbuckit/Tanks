@@ -33,7 +33,7 @@ class Interaction:
                 if p.isWithinRange():
                     p.draw(canvas)
                 else:
-                    self.explosions.append(Explosion(p.pos))
+                    self.explosions.append(Explosion(p.pos, p.getType()))
                     print("Appended explosion")
                     self.projectiles.remove(p)
         for explosion in self.explosions:

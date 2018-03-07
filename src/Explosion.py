@@ -3,7 +3,8 @@ import random
 import SimpleGUICS2Pygame.codeskulptor_lib as simplegui
 
 class Explosion:
-    def __init__(self, pos):
+    def __init__(self, pos, projType):
+        self.projType = projType
         self.pos = pos
         self.particles = []
         self.populateParticles()
@@ -11,43 +12,46 @@ class Explosion:
     # generate the list of particles
     def populateParticles(self):
         for i in range(random.randint(30,50)):
-            self.particles.append(Particle(self.pos, Vector(random.uniform(-3,3), random.uniform(-3, 3))))
-        print(len(self.particles))
-
+            if(self.projType == "shell"):
+                self.particles.append(Particle(self.pos.copy(), 24, Vector(random.uniform(-10,10), random.uniform(-10, 10))))
+            else:
+                self.particles.append(Particle(self.pos.copy(), 66, Vector(random.uniform(-3,3), random.uniform(-3, 3))))
+                
     def isFinished(self):
         for particle in self.particles:
             if(not particle.alpha <= 0):
                 return
         return True
+
     def update(self):
         for particle in self.particles:
             particle.update()
 
     def draw(self, canvas):
-        for particle in self.particles:
-            particle.draw(canvas)
+        for particle in range(len(self.particles)):
+            #print("DRAWN particle no.: " + str(particle)+ " at " + str(self.particles[particle].pos.getP()))
+            self.particles[particle].draw(canvas)
 
 class Particle:
-    def __init__(self, pos, vel):
+    def __init__(self, pos, hue, vel):
         self.pos = pos
-        self.vel = vel
+        self.velocity = vel
         self.colour = '#FFFFFF'
-        self.hue = 0.0
-        self.saturation = 0.0
+        self.hue = hue
+        self.saturation = 100.0
         self.brightness = 100.0
         self.alpha = 1.0
     
     def update(self):
-        self.pos.add(self.vel)
-        self.vel.multiply(0.3)
+        self.pos.add(self.velocity)
+        self.velocity.multiply(0.85)
         self.decreaseAlpha()
    
     def decreaseAlpha(self):
-        self.alpha -= 0.3
+        self.brightness -= 10
+        self.alpha -= 0.1
         if(not self.alpha <= 0):
             self.colour = simplegui.hsla(self.hue, self.saturation, self.brightness, self.alpha)
 
-    
     def draw(self, canvas):
-        print("Drawn!")
-        canvas.draw_circle(self.pos.getP(),3,1,self.colour,self.colour)
+        canvas.draw_circle(self.pos.getP(),2,1,self.colour,self.colour)

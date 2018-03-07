@@ -31,7 +31,7 @@ class PlayerTank:
         if(not self.readyToFire) or (self.pos - clickedVel).length() < self.generator.length():
             return
         targetVel = (clickedVel-self.pos.copy()).normalize()
-        shot = Projectile(self.pos, targetVel, self.projectileSpeed, (self.pos-clickedVel).length())
+        shot = Projectile(self.pos, targetVel, self.projectileSpeed, "shell",(self.pos-clickedVel).length())
         self.readyToFire = False
         self.counter = 0
         self.recoil(shot)
@@ -41,7 +41,7 @@ class PlayerTank:
     def shootMg(self, clickedPos):
         if self.counter % 10 == 0:
             targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-            shot = Projectile(self.pos, targetVel, self.projectileSpeed*2, (self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2)
+            shot = Projectile(self.pos, targetVel, self.projectileSpeed*2, "mg",(self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2,)
             return shot
         return
 
