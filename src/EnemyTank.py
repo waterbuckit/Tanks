@@ -1,5 +1,6 @@
 from Vector import Vector
 from Line import Line
+from Projectile import Projectile
 import math
 import copy
 
@@ -9,13 +10,11 @@ class EnemyTank:
         self.rotation = 0
         self.width = 20
         self.height = 20
-        self.turret = EnemyTurret(pos)
+        self.turret = EnemyTurret(self, pos)
         self.pos = pos
         self.health = 100.0
         self.velocity = Vector(0,0)
-        
         self.boundingCircleRadius = self.width * 1.414
-
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 7
         self.readyToFire = True
@@ -24,18 +23,13 @@ class EnemyTank:
         self.trackCount = 0
         self.trackMarks = []
     
-    def shoot(self, enemyPos):
-        pass
-   
     def recoil(self, shot):
         vel = (shot.vel.copy().normalize())*-1
         self.velocity.add(vel)
    
-    def update(self):
-        self.turret.update()
-        # For representing the front of the tank
+    def update(self, target):
+        self.turret.update(target)
         gen = self.generator.copy()
-        # Tank is a square primitive, we need the vertices
         self.mesh = list()
         for i in range(4):
             self.mesh.append((self.pos + gen).getP())
@@ -89,21 +83,37 @@ class EnemyTank:
 
 class EnemyTurret:
 
-    def __init__(self, pos):
+    def __init__(self, base, pos):
+        self.base = base
         self.width = 10
         self.height = 10
         self.pos = pos
         self.rotation = 0
         self.sides = 4
         self.generator = Vector(-self.width, -self.height)
+        self.projectileSpeed = 7
 
     def updateRotation(self, newPos):
-        pass
+        xLength = newPos.x - self.pos.x
+        yLength = newPos.y - self.pos.y
+        angle = math.degrees(math.atan2(yLength, xLength))
+        difference = angle - self.rotation
+        self.rotation += difference
+        self.generator.rotate(difference)
 
-    def update(self):
-        #self.updateRotation(newPos)
+    def getMuzzlePos(self):
+        return self.pos + self.generator.copy().rotate(135) * 2.2
+
+    def shoot(self, targetPos):
+        target = Vector(targetPos[0], targetPos[1])
+        targetVel = (target - self.getMuzzlePos()).normalize()
+        shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-target).length()) 
+        self.base.recoil(shot)
+        return shot
+    
+    def update(self, target):
+        self.updateRotation(target.pos + target.velocity)
         gen = self.generator.copy()
-        #  is a square primitive, we need the vertices
         self.mesh = list() 
         for i in range(self.sides):
             self.mesh.append((self.pos + gen).getP())
@@ -111,5 +121,5 @@ class EnemyTurret:
 
     def draw(self, canvas):
         canvas.draw_polygon(self.mesh,3,'White','Black')  
-        line = Line(self.pos, self.pos + self.generator.copy().rotate(135))
+        line = Line(self.pos, self.getMuzzlePos())
         line.draw(canvas)
