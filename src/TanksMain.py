@@ -34,12 +34,10 @@ class Interaction:
                     p.draw(canvas)
                 else:
                     self.explosions.append(Explosion(p.pos, p.getType()))
-                    print("Appended explosion")
                     self.projectiles.remove(p)
         for explosion in self.explosions:
             if explosion is not None:
                 if(explosion.isFinished()):
-                    print("removed")
                     self.explosions.remove(explosion)
                     continue
                 explosion.draw(canvas)

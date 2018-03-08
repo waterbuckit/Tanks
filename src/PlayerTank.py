@@ -22,7 +22,8 @@ class PlayerTank:
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.readyToFire = True
         self.interval = 120
-        self.counter = self.interval
+        self.reloadCounter = self.interval
+        self.counter = 100
         self.trackCount = 0
         self.trackMarks = []
 
@@ -33,7 +34,7 @@ class PlayerTank:
         targetVel = (clickedVel-self.pos.copy()).normalize()
         shot = Projectile(self.pos, targetVel, self.projectileSpeed, "shell",(self.pos-clickedVel).length())
         self.readyToFire = False
-        self.counter = 0
+        self.reloadCounter = 0
         self.recoil(shot)
         return shot
 
@@ -75,7 +76,11 @@ class PlayerTank:
         self.rotation += 1
 
     def update(self, forwards, backwards, left, right, mousePos):
+        if(not self.readyToFire):
+            self.reloadCounter += 1
         self.counter += 1
+        self.counter %= 100
+        print(self.counter)
         if(forwards):
             self.updateVelocityForwards()
         if(backwards):
@@ -84,7 +89,7 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        if(self.readyToFire or not self.counter < self.interval):
+        if(self.readyToFire or not self.reloadCounter < self.interval):
             self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
@@ -114,8 +119,8 @@ class PlayerTank:
                 if(trackMark1.alpha <= 0 or trackMark2.alpha <= 0):
                     self.trackMarks.remove((trackMark1,trackMark2))
                     continue
-                trackMark1.increaseAlpha()
-                trackMark2.increaseAlpha()
+                trackMark1.decreaseAlpha()
+                trackMark2.decreaseAlpha()
     
     def drawTrackMarks(self, canvas):
         
@@ -145,7 +150,7 @@ class PlayerTank:
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):
         # get the counter as a proportion of 360
-        angle = (self.counter/self.interval) * 360
+        angle = (self.reloadCounter/self.interval) * 360
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
                 mousePos[1]+(radius*math.sin(math.radians(i)))), 'White')

@@ -14,7 +14,7 @@ class Line:
         self.brightness = 100
         self.alpha = 1.0
         self.color = color
-    def increaseAlpha(self):
+    def decreaseAlpha(self):
         self.alpha -= 0.02
         if(not self.alpha <= 0):
             self.color = simplegui.hsla(self.hue, self.saturation, self.brightness, self.alpha)
