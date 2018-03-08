@@ -54,7 +54,7 @@ class HomingProjectile:
         self.color = 'Green'
         self.projType = "homing"
         self.maxSpeed = 6
-        self.maxForce = 0.05
+        self.maxForce = 0.1
    
     def applyForce(self, force): 
     # We could add mass here if we want A = F / M for extra deliciousness

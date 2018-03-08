@@ -42,10 +42,13 @@ class Interaction:
                         p.draw(canvas, simplegui.pygame.mouse.get_pos())
                     else:
                         p.draw(canvas)
-                    if (p.isColliding(self.enemyTank.getPosAndRadius()) or (p.getType() == "homing" and p.isAtMouseLocation(simplegui.pygame.mouse.get_pos()))):
+                    if (p.isColliding(self.enemyTank.getPosAndRadius())):
                         self.enemyTank.decreaseHealth(p.getType())
                         self.explosions.append(Explosion(p.pos, p.getType()))
-                        self.projectiles.remove(p)  
+                        self.projectiles.remove(p)
+                    elif (p.getType() == "homing" and p.isAtMouseLocation(simplegui.pygame.mouse.get_pos())):
+                        self.explosions.append(Explosion(p.pos, p.getType()))
+                        self.projectiles.remove(p)
                 else:
                     self.explosions.append(Explosion(p.pos, p.getType()))
                     self.projectiles.remove(p)
