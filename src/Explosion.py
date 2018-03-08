@@ -14,6 +14,8 @@ class Explosion:
         for i in range(random.randint(30,50)):
             if(self.projType == "shell"):
                 self.particles.append(Particle(self.pos.copy(), 24, Vector(random.uniform(-10,10), random.uniform(-10, 10))))
+            elif(self.projType == "homing"):
+                self.particles.append(Particle(self.pos.copy(), 231, Vector(random.uniform(-20,20), random.uniform(-20, 20)))) 
             else:
                 self.particles.append(Particle(self.pos.copy(), 66, Vector(random.uniform(-3,3), random.uniform(-3, 3))))
                 

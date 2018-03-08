@@ -49,6 +49,8 @@ class EnemyTank:
     def decreaseHealth(self, projType):
         if(projType == "shell"):
             self.health -= 30
+        elif(projType == "homing"):
+            self.health -= 50
         else:
             self.health -= 3
 

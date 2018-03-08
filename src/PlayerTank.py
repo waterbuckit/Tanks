@@ -1,6 +1,6 @@
 from Vector import Vector
 from Line import *
-from Projectile import Projectile
+from Projectile import Projectile, HomingProjectile
 import math
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 import copy
@@ -70,7 +70,7 @@ class PlayerTank:
             self.updateRotationRight()
         if(right):
             self.updateRotationLeft()
-        if(self.readyToFire or not self.reloadCounter < self.interval):
+        if(not self.reloadCounter < self.interval):
             self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
@@ -165,7 +165,16 @@ class PlayerTurret:
         self.base.reloadCounter = 0
         self.base.recoil(shot)
         return shot
-
+    
+    def shootHomingMissile(self, mousePos):
+        clickedVel = Vector(mousePos[0], mousePos[1])
+        targetVel = (clickedVel-self.getMuzzlePos())
+        shot = HomingProjectile(self.getMuzzlePos(), targetVel)
+        self.base.readyToFire = False
+        self.base.reloadCounter = 0
+        self.base.recoil(shot)
+        return shot
+    
     def shootMg(self, clickedPos):
         if self.base.counter % 10 == 0:
             targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()

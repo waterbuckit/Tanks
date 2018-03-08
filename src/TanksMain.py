@@ -23,7 +23,10 @@ class Interaction:
         pressed = simplegui.pygame.mouse.get_pressed()
         if pressed[2] == 1:
             shot = self.player.turret.shootMg(simplegui.pygame.mouse.get_pos())
-            self.projectiles.append(shot)
+            self.projectiles.append(shot)            
+        if(self.keyboard.space):
+            if(self.player.readyToFire):
+                self.projectiles.append(self.player.turret.shootHomingMissile(simplegui.pygame.mouse.get_pos()))
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.enemyTank.update()
 
@@ -35,8 +38,11 @@ class Interaction:
         for p in self.projectiles:
             if p is not None:
                 if p.isWithinRange():
-                    p.draw(canvas)
-                    if (p.isColliding(self.enemyTank.getPosAndRadius())):
+                    if (p.getType() == "homing"):
+                        p.draw(canvas, simplegui.pygame.mouse.get_pos())
+                    else:
+                        p.draw(canvas)
+                    if (p.isColliding(self.enemyTank.getPosAndRadius()) or (p.getType() == "homing" and p.isAtMouseLocation(simplegui.pygame.mouse.get_pos()))):
                         self.enemyTank.decreaseHealth(p.getType())
                         self.explosions.append(Explosion(p.pos, p.getType()))
                         self.projectiles.remove(p)  
@@ -66,6 +72,7 @@ class Keyboard:
         self.backwards = False
         self.left = False
         self.right = False
+        self.space = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -76,6 +83,8 @@ class Keyboard:
             self.left = True
         elif(key == simplegui.KEY_MAP['d']):
             self.right = True
+        elif(key == simplegui.KEY_MAP['space']):
+            self.space = True
     
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -86,6 +95,8 @@ class Keyboard:
             self.left = False
         elif(key == simplegui.KEY_MAP['d']):
             self.right = False
+        elif(key == simplegui.KEY_MAP['space']):
+            self.space = False
 
 i = Interaction(Keyboard())
 simplegui.pygame.mouse.set_visible(False)

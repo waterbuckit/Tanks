@@ -119,5 +119,9 @@ class Vector:
         thetaRad = theta / 180 * math.pi
         return self.rotateRad(thetaRad)
 
+    def limit(self, amount):
+        self.x = min(amount, self.x)
+        self.y = min(amount, self.y)
+
     def getDistance(self, other):
         return math.sqrt(math.pow(other.x - self.x, 2) + math.pow(other.y - self.y, 2))
