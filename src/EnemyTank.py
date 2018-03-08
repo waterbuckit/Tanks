@@ -3,6 +3,7 @@ from Line import Line
 from Projectile import Projectile
 import math
 import copy
+import cmath
 
 class EnemyTank:
 
@@ -92,6 +93,7 @@ class EnemyTurret:
         self.sides = 4
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 7
+        self.aimPos = self.generator
 
     def updateRotation(self, newPos):
         xLength = newPos.x - self.pos.x
@@ -104,15 +106,24 @@ class EnemyTurret:
     def getMuzzlePos(self):
         return self.pos + self.generator.copy().rotate(135) * 2.2
 
-    def shoot(self, targetPos):
-        target = Vector(targetPos[0], targetPos[1])
+    def shoot(self):
+        target = self.aimPos
         targetVel = (target - self.getMuzzlePos()).normalize()
         shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-target).length()) 
         self.base.recoil(shot)
         return shot
     
+    def aim(self, target):
+        a = target.velocity.x**2 + target.velocity.y**2 - self.projectileSpeed**2
+        b = (target.velocity.x * (target.pos.x - self.pos.x) + target.velocity.y * (target.pos.y - self.pos.y))
+        c = (target.pos.x - self.pos.x)**2 + (target.pos.y - self.pos.y)**2
+        discriminant = b**2 - 4 * a * c
+        t = (-b - math.sqrt(discriminant)) / (a*2)
+        self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
+        self.updateRotation(self.aimPos)
+
     def update(self, target):
-        self.updateRotation(target.pos + target.velocity)
+        self.aim(target)
         gen = self.generator.copy()
         self.mesh = list() 
         for i in range(self.sides):
@@ -123,3 +134,4 @@ class EnemyTurret:
         canvas.draw_polygon(self.mesh,3,'White','Black')  
         line = Line(self.pos, self.getMuzzlePos())
         line.draw(canvas)
+       

@@ -25,7 +25,6 @@ class Interaction:
             shot = self.player.turret.shootMg(simplegui.pygame.mouse.get_pos())
             self.projectiles.append(shot)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
-        
         self.enemyTank.update(self.player)
 
     # Method for handling drawing all objects in the scene
@@ -55,7 +54,7 @@ class Interaction:
     def mouseClickHandler(self, position):
         shot = self.player.turret.shoot(position)
         self.projectiles.append(shot)
-        shot2 = self.enemyTank.turret.shoot(self.player.pos.getP())
+        shot2 = self.enemyTank.turret.shoot()
         self.projectiles.append(shot2)
     # Method for handling key down
     def keyDownHandler(self, key):
