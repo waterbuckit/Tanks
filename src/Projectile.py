@@ -45,8 +45,7 @@ class HomingProjectile:
     def __init__(self, pos, vel,isTrailed=True,rng= 3000):
         self.acceleration = Vector(0,0)
         self.pos = pos
-        print("STARTING POS: " + str(pos.getP()))
-        self.vel = vel
+        self.vel = vel.normalize()
         self.rad = 3
         self.range = rng
         self.travelled = 0
@@ -54,7 +53,7 @@ class HomingProjectile:
         self.trail = Trail(pos, self.rad)
         self.color = 'Green'
         self.projType = "homing"
-        self.maxSpeed = 4
+        self.maxSpeed = 6
         self.maxForce = 0.05
    
     def applyForce(self, force): 
