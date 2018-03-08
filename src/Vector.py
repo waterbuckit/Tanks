@@ -118,3 +118,6 @@ class Vector:
     def rotate(self, theta):
         thetaRad = theta / 180 * math.pi
         return self.rotateRad(thetaRad)
+
+    def getDistance(self, other):
+        return math.sqrt(math.pow(other.x - self.x, 2) + math.pow(other.y - self.y, 2))
