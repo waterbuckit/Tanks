@@ -162,7 +162,7 @@ class PlayerTurret:
         targetVel = (clickedVel-self.getMuzzlePos()).normalize()
         shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-clickedVel).length())
         self.base.readyToFire = False
-        self.base.counter = 0
+        self.base.reloadCounter = 0
         self.base.recoil(shot)
         return shot
 
