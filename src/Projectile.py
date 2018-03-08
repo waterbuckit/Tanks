@@ -9,24 +9,35 @@ class Projectile:
         self.travelled = 0
         self.isTrailed = isTrailed
         self.trail = Trail(pos, rad)
-        self.color = color         
+        self.color = color
+
+    def isColliding(self, other):
+        otherPos = other[0]
+        otherRad = other[1]
+        return self.pos.x > otherPos[0] - otherRad and self.pos.x < otherPos[0] + otherRad and self.pos.y > otherPos[1] - otherRad and self.pos.y < otherPos[1] + otherRad
+    
     def getVel(self):
         return self.vel.getP()
+    
     def isWithinRange(self):
         return self.travelled < self.range
+    
     def update(self):
         hyp = self.vel.length()
         self.travelled += hyp
         self.rad -= self.rad / (self.range / hyp)
         self.pos += self.vel
         self.trail.update(self.pos, self.rad)
+    
     def draw(self, canvas):
         self.update()
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
+    
     def getType(self):
         return self.projType
+
 class Trail:
     def __init__(self, pos, rad):
         self.trailCircles = []

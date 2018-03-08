@@ -15,6 +15,8 @@ class PlayerTank:
         self.health = 100.0
         
         self.velocity = Vector(0,0)
+        
+        self.boundingCircleRadius = self.width * 1.414
 
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 7
@@ -37,7 +39,8 @@ class PlayerTank:
         self.reloadCounter = 0
         self.recoil(shot)
         return shot
-
+    def getPosAndRadius(self):
+        return (self.pos.getP(), self.boundingCircleRadius)
     #May or may not use
     def shootMg(self, clickedPos):
         if self.counter % 10 == 0:
@@ -80,7 +83,6 @@ class PlayerTank:
             self.reloadCounter += 1
         self.counter += 1
         self.counter %= 100
-        print(self.counter)
         if(forwards):
             self.updateVelocityForwards()
         if(backwards):
@@ -123,7 +125,6 @@ class PlayerTank:
                 trackMark2.decreaseAlpha()
     
     def drawTrackMarks(self, canvas):
-        
         for trackMark1, trackMark2 in self.trackMarks:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
@@ -146,6 +147,8 @@ class PlayerTank:
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.turret.draw(canvas)
         self.drawReloadStatus(canvas, self.mousePos, 9)
+        canvas.draw_circle(self.pos.getP(), self.boundingCircleRadius, 1, 'Red')
+
     
     # draws the status of the reload as a proportion in a circle
     def drawReloadStatus(self, canvas, mousePos, radius):

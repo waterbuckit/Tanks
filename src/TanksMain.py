@@ -1,6 +1,7 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from PlayerTank import PlayerTank
+from EnemyTank import EnemyTank
 from Explosion import Explosion
 
 # Frame dimensions
@@ -14,6 +15,7 @@ class Interaction:
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
+       self.enemyTank = EnemyTank(Vector(WIDTH/4, HEIGHT/4))
     
     def update(self):
         for explosion in self.explosions:
@@ -23,15 +25,22 @@ class Interaction:
             shot = self.player.shootMg(simplegui.pygame.mouse.get_pos())
             self.projectiles.append(shot)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
+        self.enemyTank.update()
 
     # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
         self.update()
         self.player.draw(canvas)
+        self.enemyTank.draw(canvas)
         for p in self.projectiles:
             if p is not None:
                 if p.isWithinRange():
                     p.draw(canvas)
+                    if (p.isColliding(self.enemyTank.getPosAndRadius())):
+                        print("Hit!")
+                        self.enemyTank.decreaseHealth(p.getType())
+                        self.explosions.append(Explosion(p.pos, p.getType()))
+                        self.projectiles.remove(p)  
                 else:
                     self.explosions.append(Explosion(p.pos, p.getType()))
                     self.projectiles.remove(p)
