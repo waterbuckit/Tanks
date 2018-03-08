@@ -22,7 +22,7 @@ class Interaction:
             explosion.update()
         pressed = simplegui.pygame.mouse.get_pressed()
         if pressed[2] == 1:
-            shot = self.player.shootMg(simplegui.pygame.mouse.get_pos())
+            shot = self.player.turret.shootMg(simplegui.pygame.mouse.get_pos())
             self.projectiles.append(shot)
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.enemyTank.update()
@@ -37,7 +37,6 @@ class Interaction:
                 if p.isWithinRange():
                     p.draw(canvas)
                     if (p.isColliding(self.enemyTank.getPosAndRadius())):
-                        print("Hit!")
                         self.enemyTank.decreaseHealth(p.getType())
                         self.explosions.append(Explosion(p.pos, p.getType()))
                         self.projectiles.remove(p)  
@@ -53,7 +52,7 @@ class Interaction:
 
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        shot = self.player.shoot(position)
+        shot = self.player.turret.shoot(position)
         self.projectiles.append(shot)
     # Method for handling key down
     def keyDownHandler(self, key):
