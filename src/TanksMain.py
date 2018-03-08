@@ -28,8 +28,13 @@ class Interaction:
     def drawHandler(self, canvas):
         self.update()
         if self.keyboard.continueGame == False:
-            canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2), 60, "White")
+            canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2-50), 60, "White")
             canvas.draw_text("Press space to continue to the game", (WIDTH / 2 - 200, HEIGHT / 2 + 100), 30, "White")
+            canvas.draw_text("Press 'M' to view controls", (WIDTH/2-140, HEIGHT/2+ 200), 30, "White")
+            if self.keyboard.showControls == True:
+                canvas.draw_text("WASD: Moves the player's tank", (100, 100), 20, "White")
+                canvas.draw_text("Left click: Fire rocket", (100, 150), 20, "White")
+                canvas.draw_text("Right click: Fire machine gun", (100, 200), 20, "White")
 
         else:
 
@@ -71,8 +76,10 @@ class Keyboard:
         self.backwards = False
         self.left = False
         self.right = False
-        #responsible for determining whether the title screen should be removed
+        # responsible for determining whether the title screen should be removed
         self.continueGame = False
+        # responsible for determining whether the control page should be shown.
+        self.showControls = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -85,7 +92,9 @@ class Keyboard:
             self.right = True
         elif(key == simplegui.KEY_MAP['space']):
             self.continueGame = True
-    
+        elif(key == simplegui.KEY_MAP['m']):
+            self.showControls = True
+
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
             self.forwards = False
