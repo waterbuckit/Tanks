@@ -82,7 +82,7 @@ class PlayerTank:
             self.mesh.append((self.pos + gen).getP())
             gen.rotate(90)
         self.turret.update(mousePos)
-        if(self.trackCount % 3 == 0):
+        if(self.trackCount % 3 == 0 and self.velocity.length() > 1):
             self.updateTrackMarks(self.generator.copy(),self.mesh[2], self.mesh[3])
    
     def updateTrackMarks(self, gen, leftVectorPos, rightVectorPos):
