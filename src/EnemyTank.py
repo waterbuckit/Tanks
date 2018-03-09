@@ -121,6 +121,7 @@ class EnemyTurret:
         c = (target.pos.x - self.pos.x)**2 + (target.pos.y - self.pos.y)**2
         discriminant = b**2 - 4 * a * c
         t = (-b - math.sqrt(discriminant)) / (a*2)
+        # somehow need to linearly interpolate to this rotation of the vector 
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
         self.updateRotation(self.aimPos)
 
