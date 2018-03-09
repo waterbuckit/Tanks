@@ -34,7 +34,7 @@ class Projectile:
     
     def draw(self, canvas):
         self.update()
-        canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
+        canvas.draw_circle(self.pos.getP(), math.fabs(self.rad), 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
     
