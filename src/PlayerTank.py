@@ -177,8 +177,9 @@ class PlayerTurret:
     
     def shootMg(self, clickedPos):
         if self.base.counter % 10 == 0:
-            targetVel = (Vector(clickedPos[0], clickedPos[1])-self.pos.copy()).normalize()
-            shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed*2, "mg",(self.pos-Vector(clickedPos[0], clickedPos[1])).length(), False, 2,)
+            clickedVel  = Vector(clickedPos[0], clickedPos[1])
+            targetVel = (clickedVel - self.getMuzzlePos()).normalize()
+            shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed*2, "mg",(self.getMuzzlePos()-clickedVel).length(), False, 2,)
             return shot
         return
 
