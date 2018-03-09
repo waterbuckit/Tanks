@@ -35,7 +35,7 @@ class PlayerTank:
         self.velocity.add(vel)
 
     def terminalVelocity(self):
-        return (math.fabs(self.velocity.length()) >= 1.4)
+        return (math.fabs(self.velocity.length()) > 1.4)
 
     def updateVelocityForwards(self):
         if(not self.terminalVelocity()):
@@ -74,7 +74,7 @@ class PlayerTank:
             self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
-        self.velocity.multiply(0.85)
+        self.velocity.multiply(0.5)
         self.mousePos = mousePos
         gen = self.generator.copy()
         self.mesh = list()

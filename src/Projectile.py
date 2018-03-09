@@ -24,12 +24,11 @@ class Projectile:
         return self.vel.getP()
     
     def isWithinRange(self):
-        return self.travelled < self.range
-    
+        return self.travelled + self.vel.length() < self.range
+
     def update(self):
-        hyp = self.vel.length()
-        self.travelled += hyp
-        self.rad -= self.rad / (self.range / hyp)
+        self.travelled += self.vel.length()
+        self.rad -= self.rad / (self.range / self.vel.length())
         self.pos += self.vel
         self.trail.update(self.pos, self.rad)
     
@@ -61,8 +60,9 @@ class HomingProjectile:
     def applyForce(self, force): 
     # We could add mass here if we want A = F / M for extra deliciousness
         self.acceleration.add(force);
-
-    def isAtMouseLocation(self, mousePos):
+    
+    def isAtMouseLocation(self):
+        mousePos = simplegui.pygame.mouse.get_pos()
         mouse = Vector(mousePos[0], mousePos[1])
         return (self.pos.getDistance(mouse) < 3)
 
@@ -87,7 +87,8 @@ class HomingProjectile:
         self.trail.update(self.pos, self.rad)
         self.acceleration.multiply(0)
 
-    def draw(self,canvas, mousePos):
+    def draw(self,canvas):
+        mousePos = simplegui.pygame.mouse.get_pos()
         self.update(mousePos)
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
@@ -100,7 +101,7 @@ class HomingProjectile:
         return self.vel.getP()
 
     def isWithinRange(self):
-        return self.travelled < self.range
+        return self.travelled < self.range and not self.isAtMouseLocation()
     
     def isColliding(self, other):
         otherPos = other[0]

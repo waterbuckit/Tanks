@@ -20,12 +20,21 @@ class Interaction:
     def update(self):
         for explosion in self.explosions:
             explosion.update()
-        pressed = simplegui.pygame.mouse.get_pressed()
-        if pressed[2] == 1:
+            if explosion.isFinished():
+                self.explosions.remove(explosion)
+        for projectile in self.projectiles:
+            if not projectile.isWithinRange():
+                self.explosions.append(Explosion(projectile.pos, projectile.getType()))
+                self.projectiles.remove(projectile)
+            if projectile.isColliding(self.enemyTank.getPosAndRadius()):
+                self.enemyTank.decreaseHealth(projectile.getType())
+                self.explosions.append(Explosion(projectile.pos, projectile.getType()))
+                self.projectiles.remove(projectile)
+        if simplegui.pygame.mouse.get_pressed()[2] == 1:
             shot = self.player.turret.shootMg(simplegui.pygame.mouse.get_pos())
-            self.projectiles.append(shot)            
-        if(self.keyboard.space):
-            if(self.player.readyToFire):
+            if shot is not None: self.projectiles.append(shot)
+        if self.keyboard.space:
+            if self.player.readyToFire:
                 self.projectiles.append(self.player.turret.shootHomingMissile(simplegui.pygame.mouse.get_pos()))
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
         self.enemyTank.update(self.player)
@@ -36,35 +45,16 @@ class Interaction:
         self.player.draw(canvas)
         self.enemyTank.draw(canvas)
         for p in self.projectiles:
-            if p is not None:
-                if p.isWithinRange():
-                    if (p.getType() == "homing"):
-                        p.draw(canvas, simplegui.pygame.mouse.get_pos())
-                    else:
-                        p.draw(canvas)
-                    if (p.isColliding(self.enemyTank.getPosAndRadius())):
-                        self.enemyTank.decreaseHealth(p.getType())
-                        self.explosions.append(Explosion(p.pos, p.getType()))
-                        self.projectiles.remove(p)
-                    elif (p.getType() == "homing" and p.isAtMouseLocation(simplegui.pygame.mouse.get_pos())):
-                        self.explosions.append(Explosion(p.pos, p.getType()))
-                        self.projectiles.remove(p)
-                else:
-                    self.explosions.append(Explosion(p.pos, p.getType()))
-                    self.projectiles.remove(p)
+            p.draw(canvas)
         for explosion in self.explosions:
-            if explosion is not None:
-                if(explosion.isFinished()):
-                    self.explosions.remove(explosion)
-                    continue
-                explosion.draw(canvas)
+            explosion.draw(canvas)
 
     # Method for handling mouse clicks
     def mouseClickHandler(self, position):
         shot = self.player.turret.shoot(position)
-        self.projectiles.append(shot)
+        if shot is not None: self.projectiles.append(shot)
         shot2 = self.enemyTank.turret.shoot()
-        self.projectiles.append(shot2)
+        if shot2 is not None: self.projectiles.append(shot2)
     # Method for handling key down
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
