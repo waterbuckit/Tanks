@@ -9,7 +9,6 @@ WIDTH = 1200
 HEIGHT = 800
 
 class Interaction:
-
     def __init__(self, keyboard):
        self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
        self.keyboard = keyboard
@@ -25,12 +24,14 @@ class Interaction:
         for projectile in self.projectiles:
             if not projectile.isWithinRange():
                 self.addExplosion(projectile.pos, projectile.getType(), projectile)
+                continue
             for enemy in self.enemies:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile.pos, projectile.getType(), projectile)
                     enemy.decreaseHealth(projectile.getType())
         for enemy in self.enemies:
                 enemy.update(self.player)
+                self.addProjectile(enemy, "shell", enemy.turret.aimPos.getP())
         if simplegui.pygame.mouse.get_pressed()[2] == 1:
             self.addProjectile(self.player, "mg", simplegui.pygame.mouse.get_pos())
         if self.keyboard.space:
@@ -60,6 +61,7 @@ class Interaction:
         self.enemies.append(enemy)
 
     def addProjectile(self, origin, type, target):
+        target = Vector(target[0], target[1])
         if type == "mg":
             shot = origin.turret.shootMg(target)
         else:

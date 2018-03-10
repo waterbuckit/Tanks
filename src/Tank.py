@@ -93,7 +93,7 @@ class Tank:
             self.readyToFire = True
         self.pos.add(self.velocity)
         self.turret.setPos(self.pos)
-        self.velocity.multiply(0.5)
+        self.velocity.multiply(0.65)
         gen = self.generator.copy()
         self.mesh = list()
         for i in range(4):
@@ -141,8 +141,7 @@ class Turret:
         self.rotation += difference
         self.generator.rotate(difference)
 
-    def shoot(self, clickedPos, type):
-        clickedVel = Vector(clickedPos[0], clickedPos[1])
+    def shoot(self, clickedVel, type):
         targetVel = (clickedVel-self.getMuzzlePos()).normalize()
         if(not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length(): return
         if type == "shell":
@@ -154,9 +153,8 @@ class Turret:
         self.base.reloadCounter = 0
         return shot
      
-    def shootMg(self, clickedPos):
+    def shootMg(self, clickedVel):
         if self.base.counter % 10 == 0:
-            clickedVel  = Vector(clickedPos[0], clickedPos[1])
             targetVel = (clickedVel - self.getMuzzlePos()).normalize()
             shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed*2, "mg",(self.getMuzzlePos()-clickedVel).length(), False, 2,)
             return shot
