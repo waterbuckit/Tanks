@@ -1,7 +1,7 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
+from Tank import Tank
 from PlayerTank import PlayerTank
-from EnemyTank import EnemyTank
 from Explosion import Explosion
 
 # Frame dimensions
@@ -15,51 +15,60 @@ class Interaction:
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
-       self.enemyTank = EnemyTank(Vector(WIDTH/4, HEIGHT/4))
-    
+       self.enemies = []
+
     def update(self):
         for explosion in self.explosions:
-            explosion.update()
             if explosion.isFinished():
                 self.explosions.remove(explosion)
+            explosion.update()
         for projectile in self.projectiles:
             if not projectile.isWithinRange():
-                self.explosions.append(Explosion(projectile.pos, projectile.getType()))
-                self.projectiles.remove(projectile)
-            if projectile.isColliding(self.enemyTank.getPosAndRadius()):
-                self.enemyTank.decreaseHealth(projectile.getType())
-                self.explosions.append(Explosion(projectile.pos, projectile.getType()))
-                self.projectiles.remove(projectile)
+                self.addExplosion(projectile.pos, projectile.getType(), projectile)
+            for enemy in self.enemies:
+                if projectile.isColliding(enemy.getPosAndRadius()):
+                    self.addExplosion(projectile.pos, projectile.getType(), projectile)
+                    enemy.decreaseHealth(projectile.getType())
+        for enemy in self.enemies:
+                enemy.update(self.player)
         if simplegui.pygame.mouse.get_pressed()[2] == 1:
-            shot = self.player.turret.shootMg(simplegui.pygame.mouse.get_pos())
-            if shot is not None: self.projectiles.append(shot)
+            self.addProjectile(self.player, "mg", simplegui.pygame.mouse.get_pos())
         if self.keyboard.space:
-            if self.player.readyToFire:
-                self.projectiles.append(self.player.turret.shootHomingMissile(simplegui.pygame.mouse.get_pos()))
+            self.addProjectile(self.player, "homing", simplegui.pygame.mouse.get_pos())
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
-        self.enemyTank.update(self.player)
 
-    # Method for handling drawing all objects in the scene
     def drawHandler(self, canvas):
         self.update()
         self.player.draw(canvas)
-        self.enemyTank.draw(canvas)
-        for p in self.projectiles:
-            p.draw(canvas)
+        for projectile in self.projectiles:
+            projectile.draw(canvas)
+        for enemy in self.enemies:
+            enemy.draw(canvas)
         for explosion in self.explosions:
             explosion.draw(canvas)
 
-    # Method for handling mouse clicks
     def mouseClickHandler(self, position):
-        shot = self.player.turret.shoot(position)
-        if shot is not None: self.projectiles.append(shot)
-        shot2 = self.enemyTank.turret.shoot()
-        if shot2 is not None: self.projectiles.append(shot2)
-    # Method for handling key down
+        self.addProjectile(self.player, "shell", position)
+
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
+
     def keyUpHandler(self, key):
         self.keyboard.keyUp(key)
+
+    def addEnemy(self, enemy):
+        self.enemies.append(enemy)
+
+    def addProjectile(self, origin, type, target):
+        if type == "mg":
+            shot = origin.turret.shootMg(target)
+        else:
+            shot = origin.turret.shoot(target, type)
+        if shot is not None: self.projectiles.append(shot)
+
+    def addExplosion(self, pos, type, source):
+        self.explosions.append(Explosion(pos, type))
+        self.projectiles.remove(source)
 
 class Keyboard:
     def __init__(self):
@@ -80,7 +89,7 @@ class Keyboard:
             self.right = True
         elif(key == simplegui.KEY_MAP['space']):
             self.space = True
-    
+
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
             self.forwards = False
@@ -94,6 +103,8 @@ class Keyboard:
             self.space = False
 
 i = Interaction(Keyboard())
+i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/4)))
+i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/2)))
 simplegui.pygame.mouse.set_visible(False)
 
 # Frame initialisation
