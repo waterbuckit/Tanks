@@ -3,64 +3,99 @@ try:
 except ImportError:
 	import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vectors import Vector
-import random
+import random, sys
+
+sys.setrecursionlimit(10000)
 
 
+#Constants
+WIDTH = 600
+HEIGHT = 400
 
 class Terrain:
-	def __init__(self, width, height, terrWidth, terrHeight):
-		self.terrPos = []
-		self.terrWidth = terrWidth
-		self.terrHeight = terrHeight
-		self.spaces = ((width//self.terrWidth)*(height//self.terrHeight))//2
-    
-    #Creates a border and adds used spaces to a list
-	def genBorder(self, width, height):
-		for x in range(0, width):
-			for y in range(0, height):
-				if((x == 0)or(y == 0))and((x%5==0)or(y%5==0)):
-					pos = Vector(x, y)
-					oppPos = Vector((width-x), (height-y))
-					self.terrPos.append(pos)
-					self.terrPos.append(oppPos)
-	
-	#Draws border from list of generated points
-	def drawAll(self, canvas):
-		img = simplegui.load_image("https://i.ytimg.com/vi/62d17RtgVU8/maxresdefault.jpg")
-		for i in range(len(self.terrPos)):		
-			canvas.draw_image(img,(1280//2, 720//2), (1280,720), ((self.terrPos[i].getP()[0]),(self.terrPos[i].getP()[1])),(10,10))
-    
-    #Checks if a space is valid for placement    
-	def valid(self, x, y, width, height):
-		for i in range(len(self.terrPos)):
-			if(self.terrPos[i].getP() == (x, y)):
-				return True
-			if not (((x%5==0)and(y%5!=0))or((x%5!=0)and(y%5==0))):
-				return True
-		if(x<0 or y<0 or x>=width or y>=height ):
-			return True
-		return False
-	
-					
-		
-	def drawMaze(self,canvas, width, height, x, y):
-			if not(self.valid(x, y, width, height)):
-				self.terrPos.append(Vector(x, y))
-				xOry = random.randint(0,1) #Choose which coord to add 1 to
-				aOrs = random.randint(0,1) # Choose if we add or subtract
-				if(aOrs == 0):
-					if(xOry == 0):
-						self.drawMaze(canvas, width, height, x+1, y)
-					else:
-						self.drawMaze(canvas, width, height, x, y+1)
-				else:
-					if(xOry == 0):
-						self.drawMaze(canvas, width, height, x-1, y)
-					else:
-						self.drawMaze(canvas, width, height, x, y-1)
+	def __init__(self, width, height):
+		self.walls = []
+		self.stack = [(0,0)]
+		self.visited = []
 
-    
-        
-	def getTerrPos(self):
-		return self.terrPos
-    
+	
+	def outFrame(self, x, y, width, height):
+		if(x<0 or y<0 or x>width or y>height):
+			return True
+	def inVisited(self, x, y):
+		for i in range(len(self.visited)):
+			if((x, y) == (self.visited[i][0], self.visited[i][1])):
+				return True
+	def inStack(self, x, y):
+		for i in range(len(self.stack)):
+			if((x, y) == (self.stack[i][0], self.stack[i][1])):
+				return True
+	def valid(self, aList, width, height):
+		newList = []
+		for i in range(len(aList)):
+			if self.outFrame(aList[i][0], aList[i][1], width, height):
+				continue
+			if self.inVisited(aList[i][0], aList[i][1]):
+				continue
+			if self.inStack(aList[i][0], aList[i][1]):
+				continue
+			newList.append((aList[i][0], aList[i][1]))	
+		return newList
+		
+		
+		
+	def genMaze(self, width, height, x, y):
+
+		while self.stack:
+
+			pointer = self.stack[-1]
+			self.walls.append(Vector(pointer[0], pointer[1]))
+			#Create list of valid negibours
+			neigh = [(pointer[0]+10, pointer[1]), (pointer[0]-10, pointer[1]), (pointer[0], pointer[1]+10), (pointer[0], pointer[1]-10)]
+			
+			validNeigh = self.valid(neigh, width, height)
+			random.shuffle(validNeigh)
+			
+			
+			
+			if(len(validNeigh)==0):
+				self.visited.append((pointer[0],pointer[1]))
+				del self.stack[-1]
+			else:
+				self.stack.append((validNeigh[0][0], validNeigh[0][1]))
+				
+			
+				
+				
+	def getWalls(self):
+		return self.walls
+	
+	def drawWalls(self, canvas):
+		for i in range(len(self.walls)):
+			if (i == len(self.walls)-1):
+				canvas.draw_line(self.walls[i].getP(), self.walls[len(self.walls)-1].getP(), 1, 'Red')
+			else:
+				canvas.draw_line(self.walls[i].getP(), self.walls[i+1].getP(), 1, 'Red')
+			
+	
+
+t1 = Terrain(WIDTH, HEIGHT)
+t1.genMaze(WIDTH, HEIGHT, 0, 0)
+
+test = t1.getWalls()
+
+
+
+
+def draw(canvas):
+	t1.drawWalls(canvas)
+
+
+
+# Create a frame and assign callbacks to event handlers
+frame = simplegui.create_frame("Home", WIDTH, HEIGHT)
+frame.set_draw_handler(draw)
+
+# Start the frame animation
+frame.start()
+
