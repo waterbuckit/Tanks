@@ -40,7 +40,7 @@ class Terrain:
 				continue
 			newList.append((aList[i][0], aList[i][1]))	
 		return newList
-		
+
 	def genMaze(self, width, height, x, y):
 		while self.stack:
 			pointer = self.stack[-1]
