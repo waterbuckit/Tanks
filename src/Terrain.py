@@ -9,8 +9,8 @@ sys.setrecursionlimit(10000)
 
 
 #Constants
-WIDTH = 600
-HEIGHT = 400
+WIDTH = 1200
+HEIGHT = 800
 
 class Terrain:
 	def __init__(self, width, height):
@@ -21,14 +21,17 @@ class Terrain:
 	def outFrame(self, x, y, width, height):
 		if(x<0 or y<0 or x>width or y>height):
 			return True
+
 	def inVisited(self, x, y):
 		for i in range(len(self.visited)):
 			if((x, y) == (self.visited[i][0], self.visited[i][1])):
 				return True
+
 	def inStack(self, x, y):
 		for i in range(len(self.stack)):
 			if((x, y) == (self.stack[i][0], self.stack[i][1])):
 				return True
+
 	def valid(self, aList, width, height):
 		newList = []
 		for i in range(len(aList)):
@@ -46,7 +49,7 @@ class Terrain:
 			pointer = self.stack[-1]
 			self.walls.append(Vector(pointer[0], pointer[1]))
 #Create list of valid negibours
-			neigh = [(pointer[0]+10, pointer[1]), (pointer[0]-10, pointer[1]), (pointer[0], pointer[1]+10), (pointer[0], pointer[1]-10)]
+			neigh = [(pointer[0]+50, pointer[1]), (pointer[0]-50, pointer[1]), (pointer[0], pointer[1]+50), (pointer[0], pointer[1]-50)]
 			validNeigh = self.valid(neigh, width, height)
 			random.shuffle(validNeigh)
 			if(len(validNeigh)==0):
