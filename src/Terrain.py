@@ -2,7 +2,7 @@ try:
 	import simplegui
 except ImportError:
 	import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
-from Vectors import Vector
+from Vector import Vector
 import random, sys
 
 sys.setrecursionlimit(10000)
@@ -21,7 +21,7 @@ class Terrain:
 	
     def outFrame(self, x, y, width, height):
 	if(x<0 or y<0 or x>width or y>height):
-			return True
+	    return True
     def inVisited(self, x, y):
 	for i in range(len(self.visited)):
 	    if((x, y) == (self.visited[i][0], self.visited[i][1])):
