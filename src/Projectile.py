@@ -43,7 +43,7 @@ class Projectile:
 
 # Projectile for following mouse cursor
 class HomingProjectile:
-    def __init__(self, pos, vel,isTrailed=True,rng= 3000):
+    def __init__(self, pos, vel,isTrailed=True,rng= 1500):
         self.acceleration = Vector(0,0)
         self.pos = pos
         self.vel = vel.normalize()
@@ -82,10 +82,11 @@ class HomingProjectile:
 
         self.vel.add(self.acceleration)
         self.vel.limit(self.maxSpeed)
-        
+        self.travelled = self.vel.length() + self.travelled
         self.pos.add(self.vel)
         self.trail.update(self.pos, self.rad)
         self.acceleration.multiply(0)
+        print(self.travelled)
 
     def draw(self,canvas):
         mousePos = simplegui.pygame.mouse.get_pos()
@@ -93,7 +94,13 @@ class HomingProjectile:
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
-    
+        self.drawTravelledStatus(canvas, self.pos.getP())
+    def drawTravelledStatus(self, canvas, pos, radius=15):
+        angle = (self.travelled/1500) * 360
+        for i in range(int(angle)):
+            canvas.draw_point((pos[0]+(radius*math.cos(math.radians(i))),
+                pos[1]+(radius*math.sin(math.radians(i)))), 'White')
+
     def getType(self):
         return self.projType
  
