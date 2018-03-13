@@ -11,13 +11,15 @@ sys.setrecursionlimit(10000)
 class Terrain:
     def __init__(self, width, height):
         self.walls = []
-        self.stack = [(0,0)]
+        self.pathSize = 100
+        self.stack = [(self.pathSize,self.pathSize)]
         self.visited = []
-        self.pathSize = 120
         self.lines = []
+        self.width = width
+        self.height = height
 
     def outFrame(self, x, y, width, height):
-        if x<0 or y<0 or x>width or y>height:
+        if x < 0+self.pathSize or y < 0+self.pathSize or x > width-self.pathSize or y > height-self.pathSize:
             return True
 
     def inVisited(self, x, y):
@@ -67,6 +69,10 @@ class Terrain:
         for i in range(len(self.walls)-1):
             self.lines.append(Line(Vector(self.walls[i].x, self.walls[i].y), Vector(self.walls[i+1].x,
                 self.walls[i+1].y)))
+        self.lines.append(Line(Vector(3,3), Vector(3, self.height-3)))
+        self.lines.append(Line(Vector(3,self.height-3), Vector(self.width-3, self.height-3)))
+        self.lines.append(Line(Vector(self.width-3, self.height-3), Vector(self.width-3, 3)))
+        self.lines.append(Line(Vector(self.width-3, 3), Vector(3, 3)))
 	
     def drawWalls(self, canvas):
         for line in self.lines:
