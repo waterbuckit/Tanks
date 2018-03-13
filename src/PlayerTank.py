@@ -20,7 +20,18 @@ class PlayerTank(Tank):
 
     def collide(self, line):
         print("BEFORE REFLECTION: " + str(self.velocity.getP()))
-        self.velocity.reflect(line.normal)
+       # self.velocity.reflect(line.normal)
+       # self.pos.add(self.velocity)
+        copy = self.velocity.copy()
+        copy.reflect(line.normal)
+        if((copy.x < 0 and self.velocity.x > 0) or (copy.x > 0 and self.velocity.x < 0)):
+            self.velocity.x *= -1
+            self.velocity.multiply(1.9)
+            self.pos.x += self.velocity.x
+        elif((copy.y < 0 and self.velocity.y > 0) or (copy.y > 0 and self.velocity.y < 0)):
+            self.velocity.y *= -1
+            self.velocity.multiply(1.9)
+            self.pos.y += self.velocity.y
         print("AFTER REFLECTION: " + str(self.velocity.getP()))
 
     def update(self, forwards, backwards, left, right, mousePos):
