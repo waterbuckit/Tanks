@@ -86,7 +86,6 @@ class HomingProjectile:
         self.pos.add(self.vel)
         self.trail.update(self.pos, self.rad)
         self.acceleration.multiply(0)
-        print(self.travelled)
 
     def draw(self,canvas):
         mousePos = simplegui.pygame.mouse.get_pos()
