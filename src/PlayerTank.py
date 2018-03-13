@@ -9,10 +9,19 @@ class PlayerTank(Tank):
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.turret = PlayerTurret(self, pos)
         self.counter = 100
-
+        self.isColliding = False
     def recoil(self, shot):
         vel = shot.vel.copy().normalize()*-2
         self.velocity.add(vel)
+    
+    def isCollidingWithLine(self, line):
+        return (line.distanceTo(self.pos) < line.thickness + self.boundingCircleRadius and
+            line.covers(self.pos))
+
+    def collide(self, line):
+        print("BEFORE REFLECTION: " + str(self.velocity.getP()))
+        self.velocity.reflect(line.normal)
+        print("AFTER REFLECTION: " + str(self.velocity.getP()))
 
     def update(self, forwards, backwards, left, right, mousePos):
         if(forwards):

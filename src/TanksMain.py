@@ -11,12 +11,13 @@ HEIGHT = 800
 
 class Interaction:
     def __init__(self, keyboard, terrain):
-       self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
+       self.player = PlayerTank(Vector((WIDTH/2)-25, (HEIGHT/2)-10))
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
        self.enemies = []
        self.terrain = terrain
+       self.currentlyColliding = {}
 
     def update(self):
         for explosion in self.explosions:
@@ -38,8 +39,17 @@ class Interaction:
             self.addProjectile(self.player, "mg", simplegui.pygame.mouse.get_pos())
         if self.keyboard.space:
             self.addProjectile(self.player, "homing", simplegui.pygame.mouse.get_pos())
+        
+        for line in self.terrain.lines:
+            if(self.player.isCollidingWithLine(line)):
+                if(not self.player.isColliding):
+                    self.player.collide(line)
+                    self.player.isColliding = True
+                    break
+            else:
+                self.player.isColliding = False
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
-
+    
     def drawHandler(self, canvas):
         self.terrain.drawWalls(canvas)
         self.update()

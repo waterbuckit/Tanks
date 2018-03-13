@@ -164,7 +164,7 @@ class Turret:
         b = (target.velocity.x * (target.pos.x - self.pos.x) + target.velocity.y * (target.pos.y - self.pos.y))
         c = (target.pos.x - self.pos.x)**2 + (target.pos.y - self.pos.y)**2
         discriminant = b**2 - 15 * a * c
-        t = (-b - math.sqrt(discriminant)) / (a*2)
+        t = (-b - math.sqrt(math.fabs(discriminant))) / (a*2)
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
         self.updateRotation(self.aimPos)
 
