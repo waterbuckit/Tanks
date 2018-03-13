@@ -29,8 +29,7 @@ class Tank:
         return self.pos.getP(), self.boundingCircleRadius
 
     def recoil(self, shot):
-        vel = shot.vel.copy().normalize()*-2
-        self.velocity.add(vel)
+        pass
 
     def terminalVelocity(self):
         return abs(self.velocity.length()) > 1.4

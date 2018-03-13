@@ -10,6 +10,10 @@ class PlayerTank(Tank):
         self.turret = PlayerTurret(self, pos)
         self.counter = 100
 
+    def recoil(self, shot):
+        vel = shot.vel.copy().normalize()*-2
+        self.velocity.add(vel)
+
     def update(self, forwards, backwards, left, right, mousePos):
         if(forwards):
             self.updateVelocityForwards()

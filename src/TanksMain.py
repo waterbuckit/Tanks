@@ -3,18 +3,20 @@ from Vector import Vector
 from Tank import Tank
 from PlayerTank import PlayerTank
 from Explosion import Explosion
+from Terrain import Terrain
 
 # Frame dimensions
 WIDTH = 1200
 HEIGHT = 800
 
 class Interaction:
-    def __init__(self, keyboard):
+    def __init__(self, keyboard, terrain):
        self.player = PlayerTank(Vector(WIDTH/2, HEIGHT/2))
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
        self.enemies = []
+       self.terrain = terrain
 
     def update(self):
         for explosion in self.explosions:
@@ -39,6 +41,7 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
 
     def drawHandler(self, canvas):
+        self.terrain.drawWalls(canvas)
         self.update()
         self.player.draw(canvas)
         for projectile in self.projectiles:
@@ -104,10 +107,14 @@ class Keyboard:
         elif(key == simplegui.KEY_MAP['space']):
             self.space = False
 
-i = Interaction(Keyboard())
+
+simplegui.pygame.mouse.set_visible(False)
+terrain = Terrain(WIDTH, HEIGHT)
+terrain.genMaze(WIDTH, HEIGHT, 0, 0)
+
+i = Interaction(Keyboard(), terrain)
 i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/4)))
 i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/2)))
-simplegui.pygame.mouse.set_visible(False)
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)

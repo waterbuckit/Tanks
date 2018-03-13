@@ -17,6 +17,7 @@ class Terrain:
 		self.walls = []
 		self.stack = [(0,0)]
 		self.visited = []
+		self.pathSize = 102
 
 	def outFrame(self, x, y, width, height):
 		if(x<0 or y<0 or x>width or y>height):
@@ -48,8 +49,8 @@ class Terrain:
 		while self.stack:
 			pointer = self.stack[-1]
 			self.walls.append(Vector(pointer[0], pointer[1]))
-#Create list of valid negibours
-			neigh = [(pointer[0]+50, pointer[1]), (pointer[0]-50, pointer[1]), (pointer[0], pointer[1]+50), (pointer[0], pointer[1]-50)]
+			#Create list of valid negibours
+			neigh = [(pointer[0]+self.pathSize, pointer[1]), (pointer[0]-self.pathSize, pointer[1]), (pointer[0], pointer[1]+self.pathSize), (pointer[0], pointer[1]-self.pathSize)]
 			validNeigh = self.valid(neigh, width, height)
 			random.shuffle(validNeigh)
 			if(len(validNeigh)==0):
@@ -64,21 +65,21 @@ class Terrain:
 	def drawWalls(self, canvas):
 		for i in range(len(self.walls)):
 			if (i == len(self.walls)-1):
-				canvas.draw_line(self.walls[i].getP(), self.walls[len(self.walls)-1].getP(), 1, 'Red')
+				canvas.draw_line(self.walls[i].getP(), self.walls[len(self.walls)-1].getP(), 1, 'White')
 			else:
-				canvas.draw_line(self.walls[i].getP(), self.walls[i+1].getP(), 1, 'Red')
+				canvas.draw_line(self.walls[i].getP(), self.walls[i+1].getP(), 1, 'White')
 
-t1 = Terrain(WIDTH, HEIGHT)
-t1.genMaze(WIDTH, HEIGHT, 0, 0)
+#t1 = Terrain(WIDTH, HEIGHT)
+#t1.genMaze(WIDTH, HEIGHT, 0, 0)
 
-test = t1.getWalls()
+#test = t1.getWalls()
 
-def draw(canvas):
-	t1.drawWalls(canvas)
+#def draw(canvas):
+#	t1.drawWalls(canvas)
 
 # Create a frame and assign callbacks to event handlers
-frame = simplegui.create_frame("Home", WIDTH, HEIGHT)
-frame.set_draw_handler(draw)
+#frame = simplegui.create_frame("Home", WIDTH, HEIGHT)
+#frame.set_draw_handler(draw)
 
 # Start the frame animation
-frame.start()
+#frame.start()
