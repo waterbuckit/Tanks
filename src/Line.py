@@ -14,11 +14,22 @@ class Line:
         self.brightness = 100
         self.alpha = 1.0
         self.color = color
+
     def decreaseAlpha(self):
         self.alpha -= 0.02
         if(not self.alpha <= 0):
             self.color = simplegui.hsla(self.hue, self.saturation, self.brightness, self.alpha)
-
+        
+    def distanceTo(self, pos):
+        posToA = pos - self.pA
+        # use the projection to allow this to work with arbitrary rotations
+        proj = posToA.dot(self.normal) * self.normal
+        return proj.length()
+    
+    def covers(self, pos):
+        return ((pos - self.pA).dot(self.unit) >= 0 and
+                (pos - self.pB).dot(-self.unit) >= 0)
+    
     def draw(self, canvas):
         canvas.draw_line(self.pA.getP(), self.pB.getP(), self.thickness, self.color)
 
