@@ -8,17 +8,12 @@ import random, sys
 
 sys.setrecursionlimit(10000)
 
-
-#Constants
-WIDTH = 1200
-HEIGHT = 800
-
 class Terrain:
     def __init__(self, width, height):
         self.walls = []
         self.stack = [(0,0)]
         self.visited = []
-        self.pathSize = 102
+        self.pathSize = 120
         self.lines = []
 
     def outFrame(self, x, y, width, height):

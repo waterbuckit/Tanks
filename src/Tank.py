@@ -92,7 +92,7 @@ class Tank:
         newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
                         random.randrange(Tank.defHeight, height-Tank.defHeight))
         for line in terrain.lines:
-            if line.distanceTo(newPos) <= Tank.defRadius + line.thickness:
+            if line.distanceTo(newPos) <= Tank.defRadius+5 + line.thickness:
                 return Tank.newEnemy(terrain, width, height)
         return Tank(newPos)
 
@@ -124,7 +124,7 @@ class Tank:
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 25), 
                 (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 25), 3, 'Green')
-        canvas.draw_circle(self.pos.getP(), self.boundingCircleRadius, 1, 'Red')
+        #canvas.draw_circle(self.pos.getP(), self.boundingCircleRadius, 1, 'Red')
         self.turret.draw(canvas)
 
 class Turret:
@@ -137,7 +137,7 @@ class Turret:
         self.rotation = 0
         self.sides = 4
         self.generator = Vector(-self.width, -self.height)
-        self.projectileSpeed = 7
+        self.projectileSpeed = 6
 
     def setPos(self, pos):
         self.pos = pos

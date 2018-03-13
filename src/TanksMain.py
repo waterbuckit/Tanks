@@ -26,8 +26,9 @@ class Interaction:
             if explosion.isFinished() and explosion is not None:
                 self.explosions.remove(explosion)
             explosion.update()
+
         for projectile in self.projectiles:
-            if not projectile.isWithinRange():
+            if not projectile.isWithinRange() or self.hitWall(projectile):
                 self.addExplosion(projectile.pos, projectile.getType(), projectile)
                 continue
             for enemy in self.enemies:
@@ -52,15 +53,15 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
          
     def drawHandler(self, canvas):
-        self.terrain.drawWalls(canvas)
         self.update()
-        self.player.draw(canvas)
-        for projectile in self.projectiles:
-            projectile.draw(canvas)
+        self.terrain.drawWalls(canvas)
         for enemy in self.enemies:
             enemy.draw(canvas)
+        for projectile in self.projectiles:
+            projectile.draw(canvas)
         for explosion in self.explosions:
             explosion.draw(canvas)
+        self.player.draw(canvas)
 
     def mouseClickHandler(self, position):
         self.addProjectile(self.player, "shell", position)
@@ -73,6 +74,11 @@ class Interaction:
 
     def addEnemy(self, enemy):
         self.enemies.append(enemy)
+
+    def hitWall(self, projectile):
+        for line in self.terrain.lines:
+            if line.distanceTo(projectile.pos) <= projectile.rad + line.thickness and line.covers(projectile.pos):
+                return True
 
     def addProjectile(self, origin, type, target):
         target = Vector(target[0], target[1])
