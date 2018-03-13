@@ -72,7 +72,6 @@ class Terrain:
         for i in range(len(self.walls)-1):
             self.lines.append(Line(Vector(self.walls[i].x, self.walls[i].y), Vector(self.walls[i+1].x,
                 self.walls[i+1].y)))
-        return self.lines
 	
     def drawWalls(self, canvas):
         for line in self.lines:

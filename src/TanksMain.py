@@ -123,7 +123,7 @@ terrain = Terrain(WIDTH, HEIGHT)
 terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
-for t in range(3):
+for t in range(5):
      i.addEnemy(Tank.newEnemy(terrain, WIDTH, HEIGHT))
 
 # Frame initialisation

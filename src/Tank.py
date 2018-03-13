@@ -14,12 +14,12 @@ class Tank:
 
     def __init__(self, pos):
         self.rotation = 0
-        self.width = 20
-        self.height = 20
+        self.width = Tank.defWidth
+        self.height = Tank.defHeight
         self.pos = pos
         self.health = 100.0
         self.velocity = Vector(0,0)
-        self.boundingCircleRadius = self.width * 1.414
+        self.boundingCircleRadius = Tank.defRadius
         self.generator = Vector(-self.width, -self.height)
         self.turret = Turret(self, pos)
         self.projectileSpeed = 7
@@ -91,7 +91,7 @@ class Tank:
     def newEnemy(terrain, width, height):
         newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
                         random.randrange(Tank.defHeight, height-Tank.defHeight))
-        for line in terrain.getLines():
+        for line in terrain.lines:
             if line.distanceTo(newPos) <= Tank.defRadius + line.thickness:
                 return Tank.newEnemy(terrain, width, height)
         return Tank(newPos)
