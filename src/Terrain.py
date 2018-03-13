@@ -50,7 +50,10 @@ class Terrain:
             pointer = self.stack[-1]
             self.walls.append(Vector(pointer[0], pointer[1]))
             #Create list of valid negibours
-            neigh = [(pointer[0]+self.pathSize, pointer[1]), (pointer[0]-self.pathSize, pointer[1]), (pointer[0], pointer[1]+self.pathSize), (pointer[0], pointer[1]-self.pathSize)]
+            neigh = [(pointer[0]+self.pathSize, pointer[1]),
+                    (pointer[0]-self.pathSize, pointer[1]),
+                    (pointer[0], pointer[1]+self.pathSize),
+                    (pointer[0], pointer[1]-self.pathSize)]
             validNeigh = self.valid(neigh, width, height)
             random.shuffle(validNeigh)
             if(len(validNeigh)==0):

@@ -130,7 +130,7 @@ class Turret:
         self.pos = pos
 
     def getMuzzlePos(self):
-        return self.pos + self.generator.copy().rotate(135) * 2.2
+        return self.pos + self.generator.copy().rotate(135) * 2.6
 
     def updateRotation(self, newPos):
         xLength = newPos.x - self.pos.x
