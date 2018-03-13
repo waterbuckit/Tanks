@@ -33,6 +33,7 @@ class PlayerTank(Tank):
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.drawReloadStatus(canvas, self.mousePos, 9)
         Tank.draw(self, canvas)
+
     # Draws the circle surrounding the cursor point indicating how "reloaded" the tank is
     def drawReloadStatus(self, canvas, mousePos, radius):
         angle = (self.reloadCounter/self.interval) * 360

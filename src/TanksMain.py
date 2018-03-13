@@ -113,8 +113,8 @@ terrain = Terrain(WIDTH, HEIGHT)
 terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
-i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/4)))
-i.addEnemy(Tank(Vector(WIDTH/4, HEIGHT/2)))
+for t in range(3):
+     i.addEnemy(Tank.newEnemy(terrain, WIDTH, HEIGHT))
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)

@@ -22,17 +22,17 @@ class Terrain:
         self.lines = []
 
     def outFrame(self, x, y, width, height):
-        if(x<0 or y<0 or x>width or y>height):
+        if x<0 or y<0 or x>width or y>height:
             return True
-    
+
     def inVisited(self, x, y):
         for i in range(len(self.visited)):
-            if((x, y) == (self.visited[i][0], self.visited[i][1])):
+            if (x, y) == (self.visited[i][0], self.visited[i][1]):
                 return True
-    
+
     def inStack(self, x, y):
         for i in range(len(self.stack)):
-            if((x, y) == (self.stack[i][0], self.stack[i][1])):
+            if (x, y) == (self.stack[i][0], self.stack[i][1]):
                 return True
 
     def valid(self, aList, width, height):
@@ -72,6 +72,7 @@ class Terrain:
         for i in range(len(self.walls)-1):
             self.lines.append(Line(Vector(self.walls[i].x, self.walls[i].y), Vector(self.walls[i+1].x,
                 self.walls[i+1].y)))
+        return self.lines
 	
     def drawWalls(self, canvas):
         for line in self.lines:
