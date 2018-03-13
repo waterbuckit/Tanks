@@ -4,8 +4,13 @@ from Projectile import Projectile, HomingProjectile
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 import math
 import copy
+import random
 
 class Tank:
+
+    defWidth = 20
+    defHeight = 20
+    defRadius = defWidth * 1.414
 
     def __init__(self, pos):
         self.rotation = 0
@@ -82,6 +87,14 @@ class Tank:
         for trackMark1, trackMark2 in self.trackMarks:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
+
+    def newEnemy(terrain, width, height):
+        newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
+                        random.randrange(Tank.defHeight, height-Tank.defHeight))
+        for line in terrain.getLines():
+            if line.distanceTo(newPos) <= Tank.defRadius + line.thickness:
+                return Tank.newEnemy(terrain, width, height)
+        return Tank(newPos)
 
     def update(self, mousePos):
         if(not self.readyToFire):
