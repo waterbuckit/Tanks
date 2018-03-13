@@ -3,6 +3,7 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
+from Line import Line
 import random, sys
 
 sys.setrecursionlimit(10000)
@@ -18,6 +19,7 @@ class Terrain:
         self.stack = [(0,0)]
         self.visited = []
         self.pathSize = 102
+        self.lines = []
 
     def outFrame(self, x, y, width, height):
         if(x<0 or y<0 or x>width or y>height):
@@ -61,13 +63,16 @@ class Terrain:
                 del self.stack[-1]
             else:
                 self.stack.append((validNeigh[0][0], validNeigh[0][1]))
+        self.getLines()
 
     def getWalls(self):
         return self.walls
+
+    def getLines(self):
+        for i in range(len(self.walls)-1):
+            self.lines.append(Line(Vector(self.walls[i].x, self.walls[i].y), Vector(self.walls[i+1].x,
+                self.walls[i+1].y)))
 	
     def drawWalls(self, canvas):
-        for i in range(len(self.walls)):
-            if (i == len(self.walls)-1):
-                canvas.draw_line(self.walls[i].getP(), self.walls[len(self.walls)-1].getP(), 1, 'White')
-            else:
-                canvas.draw_line(self.walls[i].getP(), self.walls[i+1].getP(), 1, 'White')
+        for line in self.lines:
+            line.draw(canvas)
