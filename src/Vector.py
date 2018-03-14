@@ -122,6 +122,9 @@ class Vector:
     def limit(self, amount):
         self.x = min(amount, self.x)
         self.y = min(amount, self.y)
+    
+    def cross2d(self, other):
+        return (self.x * other.y) - (self.y * other.x)    
 
     def getDistance(self, other):
         return math.sqrt(math.pow(other.x - self.x, 2) + math.pow(other.y - self.y, 2))

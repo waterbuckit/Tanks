@@ -180,8 +180,20 @@ class Turret:
         t = (-b - math.sqrt(math.fabs(discriminant))) / (a*2)
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
         self.updateRotation(self.aimPos)
-
-    def update(self, target):
+    
+    # two lines cross if we have p + t r = q + u s
+    def hasLineOfSight(self, playerPos):
+        # create a vector pointing to the target
+        targetVector = playerPos - self.pos
+        # check that this vector does not intersect with any lines
+        # t = (q − p) × s / (r × s)
+        for line in lines:
+            t = (line.pA - self.pos).cross2d(line.pB) / (self.pos + self.targetVector).cross2d(line.pB)
+            u = (line.pA - self.pos).cross2d(self.pos + self.targetVector) / (self.pos + self.targetVector).cross2d(line.pB)
+            # there is an intersect if the scalars calculated above cause these vectors to be equal
+            return (self.pos + (targetVector * t) == line.pA + (targetVector * u))
+                
+    def update(self, target):  
         self.aim(target)
         gen = self.generator.copy()
         self.mesh = list() 
