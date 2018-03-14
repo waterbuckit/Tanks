@@ -17,6 +17,14 @@ class PlayerTank(Tank):
     def isCollidingWithLine(self, line):
         return (line.distanceTo(self.pos) < line.thickness + self.boundingCircleRadius and
             line.covers(self.pos))
+    def isCollidingWithLineTipA(self, line):
+        return(line.pA.getDistance(self.pos) < self.boundingCircleRadius + line.pointRadius)
+    def isCollidingWithLineTipB(self, line):
+        return(line.pB.getDistance(self.pos) < self.boundingCircleRadius + line.pointRadius)
+    def collideTip(self, point):
+        normal = point.copy().subtract(self.pos).normalize().negate()
+        self.velocity.reflect(normal).multiply(1.9)
+        self.pos.add(self.velocity)
 
     def collide(self, line):
        # self.velocity.reflect(line.normal)

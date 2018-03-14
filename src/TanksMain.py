@@ -48,6 +48,14 @@ class Interaction:
                 if(not self.currentlyColliding[(self.player, line)]):
                     self.player.collide(line)
                     self.currentlyColliding[(self.player, line)] = True
+            elif(self.player.isCollidingWithLineTipA(line)):
+                if(not self.currentlyColliding[(self.player, line)]):
+                    self.player.collideTip(line.pA)
+                    self.currentlyColliding[(self.player, line)] = True
+            elif(self.player.isCollidingWithLineTipB(line)):
+                if(not self.currentlyColliding[(self.player, line)]):
+                    self.player.collideTip(line.pB)
+                    self.currentlyColliding[(self.player, line)] = True
             else:
                 self.currentlyColliding[(self.player, line)] = False
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())

@@ -10,6 +10,7 @@ class Line:
         self.unit = (self.pB - self.pA).normalize()
         self.normal = self.unit.copy().rotateAnti()
         self.hue = 0.0
+        self.pointRadius = 5
         self.saturation = 0.0
         self.brightness = 100
         self.alpha = 1.0
@@ -32,6 +33,8 @@ class Line:
     
     def draw(self, canvas):
         canvas.draw_line(self.pA.getP(), self.pB.getP(), self.thickness, self.color)
+        canvas.draw_circle(self.pA.getP(), self.pointRadius, 1, "Red")
+        canvas.draw_circle(self.pB.getP(), self.pointRadius, 1, "Red")
 
 class DottedLine:
     def __init__(self, point1, point2, interval=100):
