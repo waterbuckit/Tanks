@@ -54,7 +54,7 @@ class HomingProjectile:
         self.trail = Trail(pos, self.rad)
         self.color = 'Green'
         self.projType = "homing"
-        self.maxSpeed = 6
+        self.maxSpeed = 4
         self.maxForce = 0.1
    
     def applyForce(self, force): 
