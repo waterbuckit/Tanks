@@ -11,7 +11,7 @@ sys.setrecursionlimit(10000)
 class Terrain:
     def __init__(self, width, height):
         self.walls = []
-        self.pathSize = 100
+        self.pathSize = 125
         self.stack = [(self.pathSize,self.pathSize)]
         self.visited = []
         self.lines = []

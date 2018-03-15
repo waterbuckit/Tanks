@@ -31,7 +31,6 @@ class Interaction:
             if explosion.isFinished() and explosion is not None:
                 self.explosions.remove(explosion)
             explosion.update()
-
         for projectile in self.projectiles:
             if not projectile.isWithinRange() or self.hitWall(projectile):
                 self.addExplosion(projectile.pos, projectile.getType(), projectile)
@@ -42,7 +41,7 @@ class Interaction:
                     enemy.decreaseHealth(projectile.getType())
         for enemy in self.enemies:
                 enemy.update(self.player)
-                self.addProjectile(enemy, "shell", enemy.turret.aimPos.getP())
+                self.addProjectile(enemy, "shell", enemy.turret.aim(self.player))
         if simplegui.pygame.mouse.get_pressed()[2] == 1:
             self.addProjectile(self.player, "mg", simplegui.pygame.mouse.get_pos())
         if self.keyboard.space:
@@ -85,7 +84,7 @@ class Interaction:
         pass
         #canvas.draw_circle((WIDTH/2,HEIGHT/2),math.sin
     def mouseClickHandler(self, position):
-        self.addProjectile(self.player, "shell", position)
+        self.addProjectile(self.player, "shell", Vector(position[0], [1]))
 
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
@@ -102,7 +101,6 @@ class Interaction:
                 return True
 
     def addProjectile(self, origin, type, target):
-        target = Vector(target[0], target[1])
         if type == "mg":
             shot = origin.turret.shootMg(target)
         else:
