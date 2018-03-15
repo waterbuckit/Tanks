@@ -1,3 +1,4 @@
+#<<<<<<< HEAD
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from Tank import Tank
@@ -12,7 +13,6 @@ HEIGHT = 800
 
 class Interaction:
     def __init__(self, keyboard, terrain):
-
        self.terrain = terrain
        self.player = PlayerTank(Tank.newTankPos(terrain, WIDTH, HEIGHT), terrain.lines)
        self.keyboard = keyboard
@@ -27,6 +27,7 @@ class Interaction:
            self.currentlyColliding[(self.player, line)] = False
 
     def update(self):
+        mousePos = self.getMousePos()
         for explosion in self.explosions:
             if explosion.isFinished() and explosion is not None:
                 self.explosions.remove(explosion)
@@ -47,9 +48,9 @@ class Interaction:
                 enemy.update(self.player)
                 self.addProjectile(enemy, "shell", enemy.turret.aim(self.player))
         if simplegui.pygame.mouse.get_pressed()[2] == 1:
-            self.addProjectile(self.player, "mg", simplegui.pygame.mouse.get_pos())
+            self.addProjectile(self.player, "mg", Vector(mousePos[0], mousePos[1]))
         if self.keyboard.space:
-            self.addProjectile(self.player, "homing", simplegui.pygame.mouse.get_pos())
+            self.addProjectile(self.player, "homing", Vector(mousePos[0], mousePos[1]))
         
         for line in self.terrain.lines:
             if(self.player.isCollidingWithLine(line)):
@@ -69,6 +70,9 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
          
     def drawHandler(self, canvas):
+        if self.keyboard.menu == True:
+            self.drawMenu(canvas)
+            return
         if(self.keyboard.p):
             self.isPaused = not self.isPaused
         if(not self.isPaused):
@@ -98,6 +102,9 @@ class Interaction:
     def keyUpHandler(self, key):
         self.keyboard.keyUp(key)
 
+    def getMousePos(self):
+        return simplegui.pygame.mouse.get_pos()
+
     def addEnemy(self, enemy):
         self.enemies.append(enemy)
 
@@ -118,6 +125,16 @@ class Interaction:
             self.explosions.append(Explosion(pos, type))
             self.projectiles.remove(source)
 
+    def drawMenu(self, canvas):
+        canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2-50), 60, "White")
+        canvas.draw_text("Press space to continue to the game", (WIDTH / 2 - 200, HEIGHT / 2 + 100), 30, "White")
+        canvas.draw_text("Press 'C' to view controls", (WIDTH/2-140, HEIGHT/2+ 200), 30, "White")
+        if self.keyboard.showControls == True:
+            canvas.draw_text("WASD: Moves the player's tank", (100, 100), 20, "White")
+            canvas.draw_text("Left click: Fire rocket", (100, 150), 20, "White")
+            canvas.draw_text("Right click: Fire machine gun", (100, 200), 20, "White")
+            canvas.draw_text("Space bar: Fire a homing missile", (100, 250), 20, "White")
+
 class Keyboard:
     def __init__(self):
         self.forwards = False
@@ -126,6 +143,8 @@ class Keyboard:
         self.right = False
         self.space = False
         self.p = False
+        self.menu = True
+        self.showControls = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -152,9 +171,11 @@ class Keyboard:
             self.right = False
         elif(key == simplegui.KEY_MAP['space']):
             self.space = False
+            self.menu = False
         elif(key == simplegui.KEY_MAP['p']):
             self.p = False
-
+        elif(key == simplegui.KEY_MAP['c']):
+            self.showControls = not self.showControls
 
 simplegui.pygame.mouse.set_visible(False)
 terrain = Terrain(WIDTH, HEIGHT)
