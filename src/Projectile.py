@@ -115,8 +115,6 @@ class HomingProjectile:
 class Trail:
     def __init__(self, pos, rad):
         self.trailCircles = []
-        self.trailSmoke = []
-        self.smokeCounter = 5
         self.populateTrail(pos,rad)
  
     def populateTrail(self,pos,rad):
@@ -127,29 +125,39 @@ class Trail:
         # Ensure that the first element of the trail is at the position of the projectile
         firstElement = self.trailCircles[0].update(pos, rad)
         # Update this element with the position of the element i-1 in the array
-        self.smokeCounter += 1
-        self.smokeCounter %= 5
-        if(self.smokeCounter % 5 == 0):
-            self.trailSmoke.append(TrailSmoke(self.trailCircles[len(self.trailCircles)-1].getPos(),
-                ((rad/(len(self.trailCircles)-1)*3))))
-        for smoke in self.trailSmoke:
-            if(smoke.alpha <= 0):
-                self.trailSmoke.remove(smoke)
-                continue
-            smoke.update()
         for i in range(1,len(self.trailCircles)):
             self.trailCircles[i].update(self.trailCircles[i-1].getPos(), (rad/i)*3) 
 
     def draw(self, canvas):
         for i in self.trailCircles:
             i.draw(canvas)
+
+class SmokeTrail:
+    def __init__(self, shot, projectiles):
+        self.projectiles = projectiles
+        self.shot = shot
+        self.trailSmoke = []
+        self.smokeCounter = 5
+    
+    def update(self):
+        self.smokeCounter += 1
+        self.smokeCounter %= 5
+        if(self.smokeCounter % 5 == 0 and self.shot in self.projectiles):
+            self.trailSmoke.append(TrailSmoke(self.shot.trail.trailCircles[len(self.shot.trail.trailCircles)-1].getPos(),
+                ((self.shot.rad/(len(self.shot.trail.trailCircles)-1)*3))))
+        for smoke in self.trailSmoke:
+            if(smoke.alpha <= 0):
+                self.trailSmoke.remove(smoke)
+                continue
+            smoke.update()
+    
+    def draw(self,canvas):
         for smoke in self.trailSmoke:
             smoke.draw(canvas)
 
 class TrailSmoke:
     def __init__(self, pos, rad):
         self.pos = pos.copy()
-        self.projectile
         self.rad = rad
         self.colour = 'White'
         self.hue = 0.0

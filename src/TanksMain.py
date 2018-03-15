@@ -6,6 +6,7 @@ from PlayerTank import PlayerTank
 from Explosion import Explosion
 from Terrain import Terrain
 from Menu import Menu
+from Projectile import *
 import math
 import Util
 # Frame dimensions
@@ -24,6 +25,7 @@ class Interaction:
        self.projectiles = []
        self.explosions = []
        self.enemies = []
+       self.trails = []
        self.currentlyColliding = {}
        self.startEnemies = 0
        self.pauseCounter = 100
@@ -50,6 +52,10 @@ class Interaction:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile.pos, projectile.getType(), projectile)
                     enemy.decreaseHealth(projectile.getType())
+
+        for trail in self.trails:
+            trail.update()
+
         for enemy in self.enemies:
                 enemy.update(self.player)
                 self.addProjectile(enemy, "shell", enemy.turret.aim(self.player))
@@ -93,6 +99,8 @@ class Interaction:
             projectile.draw(canvas)
         for explosion in self.explosions:
             explosion.draw(canvas)
+        for trail in self.trails:
+            trail.draw(canvas)
         self.player.draw(canvas)
         if(self.isPaused):
             self.handlePause(canvas)
@@ -130,7 +138,9 @@ class Interaction:
             shot = origin.turret.shootMg(target)
         else:
             shot = origin.turret.shoot(target, type)
-        if shot is not None: self.projectiles.append(shot)
+        if shot is not None: 
+            self.projectiles.append(shot)
+            self.trails.append(SmokeTrail(shot, self.projectiles))
 
     def addExplosion(self, pos, type, source):
         if(source in self.projectiles):
