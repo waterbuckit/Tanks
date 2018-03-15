@@ -4,6 +4,7 @@ from Tank import Tank
 from PlayerTank import PlayerTank
 from Explosion import Explosion
 from Terrain import Terrain
+import math
 
 # Frame dimensions
 WIDTH = 1200
@@ -19,6 +20,9 @@ class Interaction:
        self.explosions = []
        self.enemies = []
        self.currentlyColliding = {}
+       self.startEnemies = 0
+       self.pauseCounter = 100
+       self.isPaused = False
        for line in self.terrain.lines:
            self.currentlyColliding[(self.player, line)] = False
 
@@ -62,7 +66,10 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
          
     def drawHandler(self, canvas):
-        self.update()
+        if(not self.isPaused):
+            self.update()
+        else:
+            self.handlePause(canvas)
         self.terrain.drawWalls(canvas)
         for enemy in self.enemies:
             enemy.draw(canvas)
@@ -71,7 +78,12 @@ class Interaction:
         for explosion in self.explosions:
             explosion.draw(canvas)
         self.player.draw(canvas)
-
+    
+    def handlePause(canvas):
+       # self.pauseCounter += 1
+        #self.pauseCounter %= 100
+        pass
+        #canvas.draw_circle((WIDTH/2,HEIGHT/2),math.sin
     def mouseClickHandler(self, position):
         self.addProjectile(self.player, "shell", position)
 
@@ -98,7 +110,7 @@ class Interaction:
         if shot is not None: self.projectiles.append(shot)
 
     def addExplosion(self, pos, type, source):
-        if(self.projectiles[self.projectiles.index(source)] is not None):
+        if(source in self.projectiles):
             self.explosions.append(Explosion(pos, type))
             self.projectiles.remove(source)
 
@@ -140,9 +152,10 @@ terrain = Terrain(WIDTH, HEIGHT)
 terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
-for t in range(5):
+for t in range(10):
      i.addEnemy(Tank(Tank.newTankPos(terrain, WIDTH, HEIGHT),i.terrain.lines))
 
+i.startEnemies = len(i.enemies)
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)
 frame.set_mouseclick_handler(i.mouseClickHandler)

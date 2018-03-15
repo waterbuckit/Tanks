@@ -140,6 +140,8 @@ class Turret:
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 6
         self.lOS = False
+        self.patrolCount = random.randint(0,360)
+        self.aimPos = self.pos.copy()
     def setPos(self, pos):
         self.pos = pos
 
@@ -151,6 +153,14 @@ class Turret:
         yLength = newPos.y - self.pos.y
         angle = math.degrees(math.atan2(yLength,xLength))
         difference = angle - self.rotation
+        self.rotation += difference
+        self.generator.rotate(difference)
+    def patrol(self):
+        self.updateRotationByDeg()
+    def updateRotationByDeg(self):
+        self.patrolCount += 1
+        self.patrolCount %= 360
+        difference = self.patrolCount - self.rotation
         self.rotation += difference
         self.generator.rotate(difference)
 
@@ -184,35 +194,35 @@ class Turret:
         self.updateRotation(self.aimPos)
     
     def findIntersection(self, playerPos, pA, pB):
-        s10_x = playerPos.x - self.pos.x
-        s10_y = playerPos.y - self.pos.y
-        s32_x = pB.x - pA.x
-        s32_y = pB.y - pA.y
+        sX = playerPos.x - self.pos.x
+        sY = playerPos.y - self.pos.y
+        qX = pB.x - pA.x
+        qY = pB.y - pA.y
 
-        denom = s10_x * s32_y - s32_x * s10_y
+        denom = sX * qY - qX * sY
 
         if denom == 0 : return None # collinear
         denom_is_positive = denom > 0
 
-        s02_x = self.pos.x - pA.x
-        s02_y = self.pos.y - pA.y
+        s2X = self.pos.x - pA.x
+        s2Y = self.pos.y - pA.y
 
-        s_numer = s10_x * s02_y - s10_y * s02_x
+        sNumer = sX * s2Y - sY * s2X
         
-        if (s_numer < 0) == denom_is_positive : return None # no collision
+        if (sNumer < 0) == denom_is_positive : return None # no collision
 
-        t_numer = s32_x * s02_y - s32_y * s02_x
+        tNumer = qX * s2Y - qY * s2X
 
-        if (t_numer < 0) == denom_is_positive : return None # no collision
+        if (tNumer < 0) == denom_is_positive : return None # no collision
 
-        if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive : return None # no collision
+        if (sNumer > denom) == denom_is_positive or (tNumer > denom) == denom_is_positive : return None # no collision
 
         # collision detected
 
-        t = t_numer / denom
+        t = tNumer / denom
 
-        intersection_point = (self.pos.x + (t * s10_x), self.pos.y + (t * s10_y))
-        return intersection_point
+        intersectionPoint = (self.pos.x + (t * sX), self.pos.y + (t * sY))
+        return intersectionPoint
 
     def update(self, target):  
         for line in self.base.linesRef:
@@ -222,7 +232,10 @@ class Turret:
                 break
             else:
                 self.lOS = True
-        self.aim(target)
+        if(self.lOS):
+            self.aim(target)
+        else:
+            self.patrol()
         gen = self.generator.copy()
         self.mesh = list() 
         for i in range(self.sides):
