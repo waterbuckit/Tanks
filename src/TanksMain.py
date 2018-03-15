@@ -54,7 +54,10 @@ class Interaction:
                     enemy.decreaseHealth(projectile.getType())
 
         for trail in self.trails:
-            trail.update()
+            if(trail.isFinished()):
+                self.trails.remove(trail)
+            else:
+                trail.update()
 
         for enemy in self.enemies:
                 enemy.update(self.player)

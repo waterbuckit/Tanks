@@ -150,7 +150,16 @@ class SmokeTrail:
                 self.trailSmoke.remove(smoke)
                 continue
             smoke.update()
-    
+   
+    def isFinished(self):
+        if len(self.trailSmoke) > 1:
+            for smoke in self.trailSmoke:
+                if(smoke.alpha >= 0):
+                    return False
+            return True
+        else:
+            return False
+
     def draw(self,canvas):
         for smoke in self.trailSmoke:
             smoke.draw(canvas)
