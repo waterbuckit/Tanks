@@ -71,8 +71,8 @@ class HomingProjectile:
         return (self.pos.x > otherPos[0] - otherRad and self.pos.x < otherPos[0] + otherRad and self.pos.y > otherPos[1] - otherRad and self.pos.y < otherPos[1] + otherRad)
     
     # Steering = desired - velocity 
-    def update(self, mousePos):
-        mouse = Vector(mousePos[0], mousePos[1])
+    def update(self):
+        mouse = self.getMousePos()
         # set the magnitude...
         desired = (mouse - self.pos).normalize().multiply(self.maxSpeed)
         steering = desired - self.vel
@@ -87,7 +87,7 @@ class HomingProjectile:
         self.acceleration.multiply(0)
 
     def draw(self,canvas):
-        mousePos = simplegui.pygame.mouse.get_pos()
+        mousePos = self.getMousePos()
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
@@ -103,6 +103,10 @@ class HomingProjectile:
  
     def getVel(self):
         return self.vel.getP()
+
+    def getMousePos(self):
+        mouseTup = simplegui.pygame.mouse.get_pos()
+        return Vector(mouseTup[0], mouseTup[1])
 
     def isWithinRange(self):
         return self.travelled < self.range and not self.isAtMouseLocation()
@@ -149,7 +153,6 @@ class Trail:
 class TrailSmoke:
     def __init__(self, pos, rad):
         self.pos = pos.copy()
-        self.projectile
         self.rad = rad
         self.colour = 'White'
         self.hue = 0.0
