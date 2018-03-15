@@ -31,26 +31,28 @@ class Interaction:
        self.pauseCounter = 100
        self.isPaused = False
        self.setMappings()
+       self.mousePos = self.player.pos
+       for line in self.terrain.lines:
+           self.currentlyColliding[(self.player, line)] = False
 
     def update(self):
-        mousePos = self.getMousePos()
-
+        self.mousePos = self.getMousePos()
         for explosion in self.explosions:
-            if explosion.isFinished() and explosion is not None:
-                self.explosions.remove(explosion)
             explosion.update()
-
+            if explosion.isFinished():
+                self.explosions.remove(explosion)
+                continue
+        for enemy in self.enemies:
+            enemy.update(self.player)
+            self.addProjectile(enemy, "shell", enemy.turret.aim(self.player))
         for projectile in self.projectiles:
+            projectile.update()
             if not projectile.isWithinRange() or self.hitWall(projectile):
-                self.addExplosion(projectile.pos, projectile.getType(), projectile)
-            else:
-                if projectile.getType() == "homing":
-                    projectile.update(mousePos)
-                else:
-                    projectile.update()
+                self.addExplosion(projectile)
+                continue
             for enemy in self.enemies:
                 if projectile.isColliding(enemy.getPosAndRadius()):
-                    self.addExplosion(projectile.pos, projectile.getType(), projectile)
+                    self.addExplosion(projectile)
                     enemy.decreaseHealth(projectile.getType())
 
         for trail in self.trails:
@@ -59,14 +61,8 @@ class Interaction:
             else:
                 trail.update()
 
-        for enemy in self.enemies:
-                enemy.update(self.player)
-                self.addProjectile(enemy, "shell", enemy.turret.aim(self.player))
-        if simplegui.pygame.mouse.get_pressed()[2] == 1:
-            self.addProjectile(self.player, "mg", Vector(mousePos[0], mousePos[1]))
-        if self.keyboard.space:
-            self.addProjectile(self.player, "homing", Vector(mousePos[0], mousePos[1]))
-        
+        self.checkRightClick()
+        self.checkSpacebar()
         for line in self.terrain.lines:
             if(self.player.isCollidingWithLine(line) and 
                     not self.currentlyColliding[(self.player, line)]):
@@ -83,7 +79,7 @@ class Interaction:
             else:
                 self.currentlyColliding[(self.player, line)] = False
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, 
-                self.keyboard.left, self.keyboard.right, mousePos)
+                self.keyboard.left, self.keyboard.right, self.mousePos.getP())
          
     def drawHandler(self, canvas):
         if self.keyboard.menu == True:
@@ -118,6 +114,14 @@ class Interaction:
     def mouseClickHandler(self, position):
         self.addProjectile(self.player, "shell", Vector(position[0], position[1]))
 
+    def checkRightClick(self):
+        if simplegui.pygame.mouse.get_pressed()[2] == 1:
+            self.addProjectile(self.player, "mg", self.mousePos)
+
+    def checkSpacebar(self):
+        if self.keyboard.space:
+            self.addProjectile(self.player, "homing", self.mousePos)
+
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
 
@@ -125,7 +129,8 @@ class Interaction:
         self.keyboard.keyUp(key)
 
     def getMousePos(self):
-        return simplegui.pygame.mouse.get_pos()
+        mouseTup = simplegui.pygame.mouse.get_pos()
+        return Vector(mouseTup[0], mouseTup[1])
 
     def addEnemy(self, enemy):
         self.enemies.append(enemy)
@@ -145,9 +150,9 @@ class Interaction:
             self.projectiles.append(shot)
             self.trails.append(SmokeTrail(shot, self.projectiles))
 
-    def addExplosion(self, pos, type, source):
+    def addExplosion(self, source):
         if(source in self.projectiles):
-            self.explosions.append(Explosion(pos, type))
+            self.explosions.append(Explosion(source.pos, source.getType()))
             self.projectiles.remove(source)
     
     def setMappings(self):
