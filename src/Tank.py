@@ -88,13 +88,13 @@ class Tank:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
 
-    def newEnemy(terrain, width, height):
+    def newTankPos(terrain, width, height):
         newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
                         random.randrange(Tank.defHeight, height-Tank.defHeight))
         for line in terrain.lines:
             if line.distanceTo(newPos) <= Tank.defRadius+5 + line.thickness:
-                return Tank.newEnemy(terrain, width, height)
-        return Tank(newPos)
+                return Tank.newTankPos(terrain, width, height)
+        return newPos
 
     def update(self, mousePos):
         if(not self.readyToFire):

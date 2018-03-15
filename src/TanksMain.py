@@ -11,7 +11,8 @@ HEIGHT = 800
 
 class Interaction:
     def __init__(self, keyboard, terrain):
-       self.player = PlayerTank(Vector((WIDTH/2), (HEIGHT/2)))
+
+       self.player = PlayerTank(Tank.newTankPos(terrain, WIDTH, HEIGHT))
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
@@ -139,7 +140,7 @@ terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
 for t in range(5):
-     i.addEnemy(Tank.newEnemy(terrain, WIDTH, HEIGHT))
+     i.addEnemy(Tank(Tank.newTankPos(terrain, WIDTH, HEIGHT)))
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)
