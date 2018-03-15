@@ -96,8 +96,9 @@ class Interaction:
         if shot is not None: self.projectiles.append(shot)
 
     def addExplosion(self, pos, type, source):
-        self.explosions.append(Explosion(pos, type))
-        self.projectiles.remove(source)
+        if(self.projectiles[self.projectiles.index(source)] is not None):
+            self.explosions.append(Explosion(pos, type))
+            self.projectiles.remove(source)
 
 class Keyboard:
     def __init__(self):
