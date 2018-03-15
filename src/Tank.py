@@ -178,38 +178,28 @@ class Turret:
         a = target.velocity.x**2 + target.velocity.y**2 - self.projectileSpeed**2
         b = (target.velocity.x * (target.pos.x - self.pos.x) + target.velocity.y * (target.pos.y - self.pos.y))
         c = (target.pos.x - self.pos.x)**2 + (target.pos.y - self.pos.y)**2
-        discriminant = b**2 - 10 * a * c
+        discriminant = b**2 - 6 * a * c
         t = (-b - math.sqrt(math.fabs(discriminant))) / (a*2)
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
-        self.updateRotation(self.aimPos)
-    
+        if self.aimPos.x % 1200 != self.aimPos.x or self.aimPos.y % 800 != self.aimPos.y:
+            return target.pos
+        return self.aimPos
+ 
     def findIntersection(self, playerPos, pA, pB):
         s10_x = playerPos.x - self.pos.x
         s10_y = playerPos.y - self.pos.y
         s32_x = pB.x - pA.x
         s32_y = pB.y - pA.y
-
         denom = s10_x * s32_y - s32_x * s10_y
-
         if denom == 0 : return None # collinear
         denom_is_positive = denom > 0
-
         s02_x = self.pos.x - pA.x
         s02_y = self.pos.y - pA.y
-
         s_numer = s10_x * s02_y - s10_y * s02_x
-        
         if (s_numer < 0) == denom_is_positive : return None # no collision
-
         t_numer = s32_x * s02_y - s32_y * s02_x
-
         if (t_numer < 0) == denom_is_positive : return None # no collision
-
         if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive : return None # no collision
-
-
-        # collision detected
-
         t = t_numer / denom
 
         intersection_point = (self.pos.x + (t * s10_x), self.pos.y + (t * s10_y))
@@ -223,7 +213,7 @@ class Turret:
                 break
             else:
                 self.lOS = True
-        self.aim(target)
+        self.updateRotation(self.aim(target))
         gen = self.generator.copy()
         self.mesh = list() 
         for i in range(self.sides):
