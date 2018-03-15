@@ -207,7 +207,6 @@ class Turret:
 
         if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive : return None # no collision
 
-
         # collision detected
 
         t = t_numer / denom
