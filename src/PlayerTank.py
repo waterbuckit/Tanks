@@ -3,8 +3,8 @@ from Tank import *
 
 class PlayerTank(Tank):
     
-    def __init__(self, pos):
-        Tank.__init__(self, pos)
+    def __init__(self, pos, lines):
+        Tank.__init__(self, pos, lines)
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.turret = PlayerTurret(self, pos)
@@ -17,10 +17,13 @@ class PlayerTank(Tank):
     def isCollidingWithLine(self, line):
         return (line.distanceTo(self.pos) < line.thickness + self.boundingCircleRadius and
             line.covers(self.pos))
+
     def isCollidingWithLineTipA(self, line):
         return(line.pA.getDistance(self.pos) < self.boundingCircleRadius + line.pointRadius)
+    
     def isCollidingWithLineTipB(self, line):
         return(line.pB.getDistance(self.pos) < self.boundingCircleRadius + line.pointRadius)
+    
     def collideTip(self, point):
         normal = point.copy().subtract(self.pos).normalize().negate()
         self.velocity.reflect(normal).multiply(1.9)
@@ -71,6 +74,18 @@ class PlayerTurret(Turret):
 
     def __init__(self, base, pos):
         Turret.__init__(self, base, pos)
+    
+    def shoot(self, clickedVel, type):
+        targetVel = (clickedVel-self.getMuzzlePos()).normalize()
+        if(not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length(): return
+        if type == "shell":
+            shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-clickedVel).length())
+            self.base.recoil(shot)
+        elif type == "homing":
+            shot = HomingProjectile(self.getMuzzlePos(), targetVel)
+        self.base.readyToFire = False
+        self.base.reloadCounter = 0
+        return shot
 
     def update(self, mousePos):
         # Handles the rotation of vectors for the vertices of the tank

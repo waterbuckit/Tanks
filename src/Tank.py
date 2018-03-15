@@ -12,7 +12,7 @@ class Tank:
     defHeight = 20
     defRadius = defWidth * 1.414
 
-    def __init__(self, pos):
+    def __init__(self, pos, lines):
         self.rotation = 0
         self.width = Tank.defWidth
         self.height = Tank.defHeight
@@ -29,6 +29,7 @@ class Tank:
         self.reloadCounter = self.interval
         self.trackCount = 0
         self.trackMarks = []
+        self.linesRef = lines
     
     def getPosAndRadius(self):
         return self.pos.getP(), self.boundingCircleRadius
@@ -88,13 +89,13 @@ class Tank:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
 
-    def newEnemy(terrain, width, height):
+    def newEnemy(terrain, width, height, lines):
         newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
                         random.randrange(Tank.defHeight, height-Tank.defHeight))
         for line in terrain.lines:
             if line.distanceTo(newPos) <= Tank.defRadius+5 + line.thickness:
-                return Tank.newEnemy(terrain, width, height)
-        return Tank(newPos)
+                return Tank.newEnemy(terrain, width, height, lines)
+        return Tank(newPos, lines)
 
     def update(self, mousePos):
         if(not self.readyToFire):
@@ -138,7 +139,7 @@ class Turret:
         self.sides = 4
         self.generator = Vector(-self.width, -self.height)
         self.projectileSpeed = 6
-
+        self.lOS = False
     def setPos(self, pos):
         self.pos = pos
 
@@ -154,6 +155,7 @@ class Turret:
         self.generator.rotate(difference)
 
     def shoot(self, clickedVel, type):
+        if(not self.lOS) : return
         targetVel = (clickedVel-self.getMuzzlePos()).normalize()
         if(not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length(): return
         if type == "shell":
@@ -181,19 +183,46 @@ class Turret:
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
         self.updateRotation(self.aimPos)
     
-    # two lines cross if we have p + t r = q + u s
-    def hasLineOfSight(self, playerPos):
-        # create a vector pointing to the target
-        targetVector = playerPos - self.pos
-        # check that this vector does not intersect with any lines
-        # t = (q − p) × s / (r × s)
-        for line in lines:
-            t = (line.pA - self.pos).cross2d(line.pB) / (self.pos + self.targetVector).cross2d(line.pB)
-            u = (line.pA - self.pos).cross2d(self.pos + self.targetVector) / (self.pos + self.targetVector).cross2d(line.pB)
-            # there is an intersect if the scalars calculated above cause these vectors to be equal
-            return (self.pos + (targetVector * t) == line.pA + (targetVector * u))
-                
+    def findIntersection(self, playerPos, pA, pB):
+        s10_x = playerPos.x - self.pos.x
+        s10_y = playerPos.y - self.pos.y
+        s32_x = pB.x - pA.x
+        s32_y = pB.y - pA.y
+
+        denom = s10_x * s32_y - s32_x * s10_y
+
+        if denom == 0 : return None # collinear
+        denom_is_positive = denom > 0
+
+        s02_x = self.pos.x - pA.x
+        s02_y = self.pos.y - pA.y
+
+        s_numer = s10_x * s02_y - s10_y * s02_x
+        
+        if (s_numer < 0) == denom_is_positive : return None # no collision
+
+        t_numer = s32_x * s02_y - s32_y * s02_x
+
+        if (t_numer < 0) == denom_is_positive : return None # no collision
+
+        if (s_numer > denom) == denom_is_positive or (t_numer > denom) == denom_is_positive : return None # no collision
+
+
+        # collision detected
+
+        t = t_numer / denom
+
+        intersection_point = (self.pos.x + (t * s10_x), self.pos.y + (t * s10_y))
+        return intersection_point
+
     def update(self, target):  
+        for line in self.base.linesRef:
+            findIntersectionPointRes = self.findIntersection(target.pos, line.pA, line.pB)
+            if(findIntersectionPointRes is not None):
+                self.lOS = False
+                break
+            else:
+                self.lOS = True
         self.aim(target)
         gen = self.generator.copy()
         self.mesh = list() 

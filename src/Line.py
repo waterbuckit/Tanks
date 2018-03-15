@@ -23,7 +23,6 @@ class Line:
         
     def distanceTo(self, pos):
         posToA = pos - self.pA
-        # use the projection to allow this to work with arbitrary rotations
         proj = posToA.dot(self.normal) * self.normal
         return proj.length()
     
@@ -33,8 +32,8 @@ class Line:
     
     def draw(self, canvas):
         canvas.draw_line(self.pA.getP(), self.pB.getP(), self.thickness, self.color)
-        canvas.draw_circle(self.pA.getP(), self.pointRadius, 1, "Red")
-        canvas.draw_circle(self.pB.getP(), self.pointRadius, 1, "Red")
+       # canvas.draw_circle(self.pA.getP(), self.pointRadius, 1, "Red")
+       # canvas.draw_circle(self.pB.getP(), self.pointRadius, 1, "Red")
 
 class DottedLine:
     def __init__(self, point1, point2, interval=100):
