@@ -19,28 +19,32 @@ class Terrain:
 		self.height = height
 		self.pickupItems =[]
 
+		self.genRandomPoint()
+
 
 	def genRandomPoint(self):
 		listOfPoints = []
 		#Adds pick up to random coords not on a line
 		for i in range(0, 5):
 			point = Vector(random.randint(0, 1200), random.randint(0, 800))
-			if not(self.inWalls(point)):
-				listOfPoints.append(point)
+			if not(self.inWalls(point)) and not(self.inWallRadius(point)):
+				self.pickupItems.append(point)
+				print(self.pickupItems)
 				
-		return listOfPoints
 
 
 
-	
 	def drawItemPickUp(self, canvas):
 		LINE_WIDTH = 2
 
-		self.pickupItems = self.genRandomPoint()
 		for item in self.pickupItems:
 			canvas.draw_circle(item.getP(), 10, LINE_WIDTH, 'Red', 'Red')
 
 
+	def inWallRadius(self, point):
+		for line in self.lines:
+			if(line.distanceTo(point)< line.thickness + 10*2 + 30):
+				return True
 
 
 
@@ -111,7 +115,6 @@ class Terrain:
 		for line in self.lines:
 			line.draw(canvas)
 
-t1 = Terrain(0,0)
 
-t1.genRandomPoint()
+
 
