@@ -149,6 +149,7 @@ class Trail:
 class TrailSmoke:
     def __init__(self, pos, rad):
         self.pos = pos.copy()
+        self.projectile
         self.rad = rad
         self.colour = 'White'
         self.hue = 0.0

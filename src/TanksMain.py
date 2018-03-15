@@ -5,6 +5,7 @@ from Tank import Tank
 from PlayerTank import PlayerTank
 from Explosion import Explosion
 from Terrain import Terrain
+from Menu import Menu
 import math
 import Util
 # Frame dimensions
@@ -12,9 +13,13 @@ WIDTH = 1200
 HEIGHT = 800
 
 class Interaction:
+    
+    menu = Menu()
+    
     def __init__(self, keyboard, terrain):
        self.terrain = terrain
-       self.player = PlayerTank(Tank.newTankPos(terrain, WIDTH, HEIGHT), terrain.lines)
+       self.player = PlayerTank(Tank.newTankPos(terrain, WIDTH, HEIGHT),
+               terrain.lines)
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
@@ -23,21 +28,22 @@ class Interaction:
        self.startEnemies = 0
        self.pauseCounter = 100
        self.isPaused = False
-       for line in self.terrain.lines:
-           self.currentlyColliding[(self.player, line)] = False
+       self.setMappings()
 
     def update(self):
         mousePos = self.getMousePos()
+
         for explosion in self.explosions:
             if explosion.isFinished() and explosion is not None:
                 self.explosions.remove(explosion)
             explosion.update()
+
         for projectile in self.projectiles:
             if not projectile.isWithinRange() or self.hitWall(projectile):
                 self.addExplosion(projectile.pos, projectile.getType(), projectile)
             else:
                 if projectile.getType() == "homing":
-                    projectile.update(simplegui.pygame.mouse.get_pos())
+                    projectile.update(mousePos)
                 else:
                     projectile.update()
             for enemy in self.enemies:
@@ -53,25 +59,26 @@ class Interaction:
             self.addProjectile(self.player, "homing", Vector(mousePos[0], mousePos[1]))
         
         for line in self.terrain.lines:
-            if(self.player.isCollidingWithLine(line)):
-                if(not self.currentlyColliding[(self.player, line)]):
-                    self.player.collide(line)
-                    self.currentlyColliding[(self.player, line)] = True
-            elif(self.player.isCollidingWithLineTipA(line)):
-                if(not self.currentlyColliding[(self.player, line)]):
-                    self.player.collideTip(line.pA)
-                    self.currentlyColliding[(self.player, line)] = True
-            elif(self.player.isCollidingWithLineTipB(line)):
-                if(not self.currentlyColliding[(self.player, line)]):
-                    self.player.collideTip(line.pB)
-                    self.currentlyColliding[(self.player, line)] = True
+            if(self.player.isCollidingWithLine(line) and 
+                    not self.currentlyColliding[(self.player, line)]):
+                self.player.collide(line)
+                self.currentlyColliding[(self.player, line)] = True
+            elif(self.player.isCollidingWithLineTipA(line) and 
+                    not self.currentlyColliding[(self.player, line)]):
+                self.player.collideTip(line.pA)
+                self.currentlyColliding[(self.player, line)] = True
+            elif(self.player.isCollidingWithLineTipB(line) and 
+                    not self.currentlyColliding[(self.player, line)]):
+                self.player.collideTip(line.pB)
+                self.currentlyColliding[(self.player, line)] = True
             else:
                 self.currentlyColliding[(self.player, line)] = False
-        self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
+        self.player.update(self.keyboard.forwards, self.keyboard.backwards, 
+                self.keyboard.left, self.keyboard.right, mousePos)
          
     def drawHandler(self, canvas):
         if self.keyboard.menu == True:
-            self.drawMenu(canvas)
+            Interaction.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT)
             return
         if(self.keyboard.p):
             self.isPaused = True
@@ -93,7 +100,9 @@ class Interaction:
     def handlePause(self,canvas):
         self.pauseCounter += 0.1
         self.pauseCounter %= 100
-        canvas.draw_circle((WIDTH/2,HEIGHT/2), Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1, "#accaf9", "#accaf9")
+        canvas.draw_circle((WIDTH/2,HEIGHT/2), 
+                Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1,
+                "#accaf9", "#accaf9")
     
     def mouseClickHandler(self, position):
         self.addProjectile(self.player, "shell", Vector(position[0], position[1]))
@@ -112,7 +121,8 @@ class Interaction:
 
     def hitWall(self, projectile):
         for line in self.terrain.lines:
-            if line.distanceTo(projectile.pos) <= projectile.rad + line.thickness and line.covers(projectile.pos):
+            if(line.distanceTo(projectile.pos) <= projectile.rad + line.thickness
+                    and line.covers(projectile.pos)):
                 return True
 
     def addProjectile(self, origin, type, target):
@@ -126,16 +136,10 @@ class Interaction:
         if(source in self.projectiles):
             self.explosions.append(Explosion(pos, type))
             self.projectiles.remove(source)
-
-    def drawMenu(self, canvas):
-        canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2-50), 60, "White")
-        canvas.draw_text("Press space to continue to the game", (WIDTH / 2 - 200, HEIGHT / 2 + 100), 30, "White")
-        canvas.draw_text("Press 'C' to view controls", (WIDTH/2-140, HEIGHT/2+ 200), 30, "White")
-        if self.keyboard.showControls == True:
-            canvas.draw_text("WASD: Moves the player's tank", (100, 100), 20, "White")
-            canvas.draw_text("Left click: Fire rocket", (100, 150), 20, "White")
-            canvas.draw_text("Right click: Fire machine gun", (100, 200), 20, "White")
-            canvas.draw_text("Space bar: Fire a homing missile", (100, 250), 20, "White")
+    
+    def setMappings(self):
+       for line in self.terrain.lines:
+           self.currentlyColliding[(self.player, line)] = False
 
 class Keyboard:
     def __init__(self):
