@@ -121,10 +121,10 @@ class Tank:
         canvas.draw_polygon(self.mesh,3,'White','Black')
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 25), 
-                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 25), 3, 'Red')
+                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 25), 3, '#ff180c')
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 25), 
-                (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 25), 3, 'Green')
+                (self.pos.x - (self.width/2) + ((self.health/100)*self.width), self.pos.y + (self.height/2) + 25), 3, '#80ff56')
         #canvas.draw_circle(self.pos.getP(), self.boundingCircleRadius, 1, 'Red')
         self.turret.draw(canvas)
 
