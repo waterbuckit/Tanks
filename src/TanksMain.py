@@ -5,7 +5,7 @@ from PlayerTank import PlayerTank
 from Explosion import Explosion
 from Terrain import Terrain
 import math
-
+import Util
 # Frame dimensions
 WIDTH = 1200
 HEIGHT = 800
@@ -34,7 +34,11 @@ class Interaction:
         for projectile in self.projectiles:
             if not projectile.isWithinRange() or self.hitWall(projectile):
                 self.addExplosion(projectile.pos, projectile.getType(), projectile)
-                continue
+            else:
+                if projectile.getType() == "homing":
+                    projectile.update(simplegui.pygame.mouse.get_pos())
+                else:
+                    projectile.update()
             for enemy in self.enemies:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile.pos, projectile.getType(), projectile)
@@ -65,10 +69,10 @@ class Interaction:
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
          
     def drawHandler(self, canvas):
+        if(self.keyboard.p):
+            self.isPaused = not self.isPaused
         if(not self.isPaused):
             self.update()
-        else:
-            self.handlePause(canvas)
         self.terrain.drawWalls(canvas)
         for enemy in self.enemies:
             enemy.draw(canvas)
@@ -77,14 +81,16 @@ class Interaction:
         for explosion in self.explosions:
             explosion.draw(canvas)
         self.player.draw(canvas)
+        if(self.isPaused):
+            self.handlePause(canvas)
+
+    def handlePause(self,canvas):
+        self.pauseCounter += 0.1
+        self.pauseCounter %= 100
+        canvas.draw_circle((WIDTH/2,HEIGHT/2), Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1, "#accaf9", "#accaf9")
     
-    def handlePause(canvas):
-       # self.pauseCounter += 1
-        #self.pauseCounter %= 100
-        pass
-        #canvas.draw_circle((WIDTH/2,HEIGHT/2),math.sin
     def mouseClickHandler(self, position):
-        self.addProjectile(self.player, "shell", Vector(position[0], [1]))
+        self.addProjectile(self.player, "shell", Vector(position[0], position[1]))
 
     def keyDownHandler(self, key):
         self.keyboard.keyDown(key)
@@ -119,6 +125,7 @@ class Keyboard:
         self.left = False
         self.right = False
         self.space = False
+        self.p = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -131,6 +138,8 @@ class Keyboard:
             self.right = True
         elif(key == simplegui.KEY_MAP['space']):
             self.space = True
+        elif(key == simplegui.KEY_MAP['p']):
+            self.p = True
 
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -143,6 +152,8 @@ class Keyboard:
             self.right = False
         elif(key == simplegui.KEY_MAP['space']):
             self.space = False
+        elif(key == simplegui.KEY_MAP['p']):
+            self.p = False
 
 
 simplegui.pygame.mouse.set_visible(False)

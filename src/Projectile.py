@@ -33,7 +33,6 @@ class Projectile:
         self.trail.update(self.pos, self.rad)
     
     def draw(self, canvas):
-        self.update()
         canvas.draw_circle(self.pos.getP(), math.fabs(self.rad), 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)
@@ -89,7 +88,6 @@ class HomingProjectile:
 
     def draw(self,canvas):
         mousePos = simplegui.pygame.mouse.get_pos()
-        self.update(mousePos)
         canvas.draw_circle(self.pos.getP(), self.rad, 1, self.color, self.color)
         if self.isTrailed:
             self.trail.draw(canvas)

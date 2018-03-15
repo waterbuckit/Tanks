@@ -167,7 +167,8 @@ class Turret:
     def shoot(self, clickedVel, type):
         if(not self.lOS) : return
         targetVel = (clickedVel-self.getMuzzlePos()).normalize()
-        if(not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length(): return
+        if((not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length()):
+            return
         if type == "shell":
             shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-clickedVel).length())
             self.base.recoil(shot)
