@@ -30,8 +30,6 @@ class PlayerTank(Tank):
         self.pos.add(self.velocity)
 
     def collide(self, line):
-       # self.velocity.reflect(line.normal)
-       # self.pos.add(self.velocity)
         copy = self.velocity.copy()
         copy.reflect(line.normal)
         if((copy.x < 0 and self.velocity.x > 0) or (copy.x > 0 and self.velocity.x < 0)):

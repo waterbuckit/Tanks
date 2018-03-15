@@ -10,17 +10,17 @@ WIDTH = 1200
 HEIGHT = 800
 
 class Interaction:
-    def __init__(self, keyboard, terrain): 
-        self.keyboard = keyboard
-        self.projectiles = []
-        self.explosions = []
-        self.enemies = []
-        self.terrain = terrain
-        self.currentlyColliding = {}
-        self.player = PlayerTank(Vector((WIDTH/2), (HEIGHT/2)), self.terrain.lines)
-        for line in self.terrain.lines:
-            self.currentlyColliding[(self.player, line)] = False
-        
+    def __init__(self, keyboard, terrain):
+
+       self.terrain = terrain
+       self.player = PlayerTank(Tank.newTankPos(terrain, WIDTH, HEIGHT), terrain.lines)
+       self.keyboard = keyboard
+       self.projectiles = []
+       self.explosions = []
+       self.enemies = []
+       self.currentlyColliding = {}
+       for line in self.terrain.lines:
+           self.currentlyColliding[(self.player, line)] = False
 
     def update(self):
         for explosion in self.explosions:
@@ -140,7 +140,7 @@ terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
 for t in range(5):
-     i.addEnemy(Tank.newEnemy(terrain, WIDTH, HEIGHT, i.terrain.lines))
+     i.addEnemy(Tank(Tank.newTankPos(terrain, WIDTH, HEIGHT),i.terrain.lines))
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)

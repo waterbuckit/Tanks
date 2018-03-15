@@ -89,13 +89,13 @@ class Tank:
             trackMark1.draw(canvas)
             trackMark2.draw(canvas)
 
-    def newEnemy(terrain, width, height, lines):
+    def newTankPos(terrain, width, height):
         newPos = Vector(random.randrange(Tank.defWidth, width-Tank.defWidth), 
                         random.randrange(Tank.defHeight, height-Tank.defHeight))
         for line in terrain.lines:
             if line.distanceTo(newPos) <= Tank.defRadius+5 + line.thickness:
-                return Tank.newEnemy(terrain, width, height, lines)
-        return Tank(newPos, lines)
+                return Tank.newTankPos(terrain, width, height)
+        return newPos
 
     def update(self, mousePos):
         if(not self.readyToFire):
@@ -178,7 +178,7 @@ class Turret:
         a = target.velocity.x**2 + target.velocity.y**2 - self.projectileSpeed**2
         b = (target.velocity.x * (target.pos.x - self.pos.x) + target.velocity.y * (target.pos.y - self.pos.y))
         c = (target.pos.x - self.pos.x)**2 + (target.pos.y - self.pos.y)**2
-        discriminant = b**2 - 15 * a * c
+        discriminant = b**2 - 10 * a * c
         t = (-b - math.sqrt(math.fabs(discriminant))) / (a*2)
         self.aimPos = Vector(t*target.velocity.x+target.pos.x, t*target.velocity.y + target.pos.y)
         self.updateRotation(self.aimPos)
