@@ -74,7 +74,9 @@ class Interaction:
             self.drawMenu(canvas)
             return
         if(self.keyboard.p):
-            self.isPaused = not self.isPaused
+            self.isPaused = True
+        else:
+            self.isPaused = False
         if(not self.isPaused):
             self.update()
         self.terrain.drawWalls(canvas)
@@ -157,8 +159,6 @@ class Keyboard:
             self.right = True
         elif(key == simplegui.KEY_MAP['space']):
             self.space = True
-        elif(key == simplegui.KEY_MAP['p']):
-            self.p = True
 
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -173,7 +173,7 @@ class Keyboard:
             self.space = False
             self.menu = False
         elif(key == simplegui.KEY_MAP['p']):
-            self.p = False
+            self.p = not self.p
         elif(key == simplegui.KEY_MAP['c']):
             self.showControls = not self.showControls
 
