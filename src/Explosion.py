@@ -10,17 +10,20 @@ class Explosion:
         self.populateParticles()
 
     # generate the list of particles
-    def populateParticles(self):
-        for i in range(random.randint(30,50)):
-            if(self.projType == "shell"):
+    def populateParticles(self): 
+        if(self.projType == "shell"):
+            for i in range(random.randint(70,90)):
                 self.particles.append(Particle(self.pos.copy(), 24, Vector(random.uniform(-10,10), random.uniform(-10, 10))))
-            elif(self.projType == "homing"):
+        elif(self.projType == "homing"):
+            for i in range(random.randint(70,90)):
                 self.particles.append(Particle(self.pos.copy(), 231, Vector(random.uniform(-20,20), random.uniform(-20, 20)))) 
-            elif(self.projType == "tankKill"):
-                self.particles.append(Particle(self.pos.copy(), 360, Vector(random.uniform(-30,30), random.uniform(-30,30))))
-            else:
+        elif(self.projType == "tankKill"):
+            for i in range(random.randint(150,200)):
+                self.particles.append(Particle(self.pos.copy(), 104, Vector(random.uniform(-30,30), random.uniform(-30,30))))
+        else:
+            for i in range(random.randint(30,50)):
                 self.particles.append(Particle(self.pos.copy(), 66, Vector(random.uniform(-3,3), random.uniform(-3, 3))))
-                
+                        
     def isFinished(self):
         for particle in self.particles:
             if(not particle.alpha <= 0):
