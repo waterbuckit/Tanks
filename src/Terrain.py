@@ -60,7 +60,7 @@ class Terrain:
                 del self.stack[-1]
             else:
                 self.stack.append((validNeigh[0][0], validNeigh[0][1]))
-        self.getLines()
+        return self.getLines()
 
     def getWalls(self):
         return self.walls
@@ -73,6 +73,7 @@ class Terrain:
         self.lines.append(Line(Vector(3,self.height-3), Vector(self.width-3, self.height-3)))
         self.lines.append(Line(Vector(self.width-3, self.height-3), Vector(self.width-3, 3)))
         self.lines.append(Line(Vector(self.width-3, 3), Vector(3, 3)))
+        return self.lines
 	
     def drawWalls(self, canvas):
         for line in self.lines:

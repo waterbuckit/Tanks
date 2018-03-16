@@ -1,4 +1,7 @@
-#<<<<<<< HEAD
+#░▀█▀░█▀█░█▀█░█░█░█▀▀
+#░░█░░█▀█░█░█░█▀▄░▀▀█
+#░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀
+
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from Game import Game
@@ -20,7 +23,7 @@ class Interaction:
     
     def __init__(self, keyboard, game):
        self.game = game
-       game.newRound(5)
+       self.game.newRound(1)
        self.keyboard = keyboard
        self.projectiles = []
        self.explosions = []
@@ -34,7 +37,9 @@ class Interaction:
            self.currentlyColliding[(self.game.player, line)] = False
 
     def update(self):
-        self.mousePos = self.getMousePos()
+        self.mousePos = self.getMousePos() 
+        if(len(self.game.enemies) == 0):
+            self.handleGameWin()
         for explosion in self.explosions:
             explosion.update()
             if explosion.isFinished():
@@ -52,6 +57,9 @@ class Interaction:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile)
                     enemy.decreaseHealth(projectile.getType())
+                    if(enemy.health <= 0):
+                        self.addProjlessExplosion(enemy.pos)
+                        self.game.enemies.remove(enemy)
         for trail in self.trails:
             if(trail.isFinished()):
                 self.trails.remove(trail)
@@ -106,7 +114,17 @@ class Interaction:
         canvas.draw_circle((WIDTH/2,HEIGHT/2), 
                 Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1,
                 "#accaf9", "#accaf9")
-    
+
+    def handleGameWin(self): 
+        # Clear all the lists
+        self.game.newRound(game.lastRoundCount+1)
+        self.projectiles.clear()
+        self.explosions.clear()
+        #self.game.enemies.clear()
+        self.trails.clear()
+        self.currentlyColliding.clear()
+        self.setMappings()
+
     def mouseClickHandler(self, position):
         self.addProjectile(self.game.player, "shell", Vector(position[0], position[1]))
 
@@ -141,7 +159,11 @@ class Interaction:
             shot = origin.turret.shoot(target, type)
         if shot is not None: 
             self.projectiles.append(shot)
-            self.trails.append(SmokeTrail(shot, self.projectiles))
+            if(not shot.projType == "mg"):
+                self.trails.append(SmokeTrail(shot, self.projectiles))
+    
+    def addProjlessExplosion(self, pos):
+        self.explosions.append(Explosion(pos, "tankKill"))
 
     def addExplosion(self, source):
         if(source in self.projectiles):
@@ -195,6 +217,7 @@ class Keyboard:
 game = Game(1200, 800)
 i = Interaction(Keyboard(), game)
 i.startEnemies = len(game.enemies)
+simplegui.pygame.mouse.set_visible(False)
 
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)
