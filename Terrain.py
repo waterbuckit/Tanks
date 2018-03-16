@@ -5,6 +5,7 @@ except ImportError:
 from Vector import Vector
 from Line import Line
 import random, sys
+from PlayerTank import PlayerTank
 
 sys.setrecursionlimit(10000)
 
@@ -34,9 +35,11 @@ class Terrain:
 
 
 
-	def drawItemPickUp(self, canvas):
+	def drawItemPickUp(self, canvas, player):
 		LINE_WIDTH = 2
 
+
+		self.pickupItems = player.pickUpItem(self.pickupItems)
 		for item in self.pickupItems:
 			canvas.draw_circle(item.getP(), 10, LINE_WIDTH, 'Red', 'Red')
 

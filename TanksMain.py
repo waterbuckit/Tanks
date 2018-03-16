@@ -60,11 +60,13 @@ class Interaction:
             else:
                 self.currentlyColliding[(self.player, line)] = False
         self.player.update(self.keyboard.forwards, self.keyboard.backwards, self.keyboard.left, self.keyboard.right, simplegui.pygame.mouse.get_pos())
+
+
          
     def drawHandler(self, canvas):
         self.update()
         self.terrain.drawWalls(canvas)
-        self.terrain.drawItemPickUp(canvas)
+        self.terrain.drawItemPickUp(canvas, self.player)
         for enemy in self.enemies:
             enemy.draw(canvas)
         for projectile in self.projectiles:

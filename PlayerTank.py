@@ -1,6 +1,7 @@
 from Line import *
 from Tank import *
 
+
 class PlayerTank(Tank):
     
     def __init__(self, pos):
@@ -39,6 +40,25 @@ class PlayerTank(Tank):
             self.velocity.y *= -1
             self.velocity.multiply(1.9)
             self.pos.y += self.velocity.y
+
+    def pickUpItem(self, items):
+        pickUpRadius = 10
+        for item in items:
+            distance = item.getDistance(self.pos)
+            if(distance < pickUpRadius + 3):
+                # remove item from the map
+                # apply item pickup
+                self.applyHealthPack()
+                items.remove(item)
+                print("Applying health pack")
+                print("removing item from map")
+        return items
+
+    def applyHealthPack(self):
+        maxHealth = 100
+        self.health += 25
+        if self.health > maxHealth:
+            self.health == maxHealth
 
     def update(self, forwards, backwards, left, right, mousePos):
         if(forwards):
