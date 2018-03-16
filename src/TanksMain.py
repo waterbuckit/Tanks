@@ -86,16 +86,13 @@ class Interaction:
                 self.keyboard.left, self.keyboard.right, self.mousePos.getP())
          
     def drawHandler(self, canvas):
-        if self.keyboard.menu == True:
+        if self.keyboard.menu:
             self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT)
             return
-        if(self.keyboard.p):
-            self.isPaused = True
-        else:
-            self.isPaused = False
-        if(not self.isPaused):
+        if not self.keyboard.p:
             self.update()
         self.game.terrain.drawWalls(canvas)
+        self.game.drawInfo(canvas)
         for enemy in self.game.enemies:
             enemy.draw(canvas)
         for projectile in self.projectiles:
@@ -105,10 +102,10 @@ class Interaction:
         for trail in self.trails:
             trail.draw(canvas)
         self.game.player.draw(canvas)
-        if(self.isPaused):
-            self.handlePause(canvas)
+        self.handlePause(canvas, self.keyboard.p)
 
-    def handlePause(self,canvas):
+    def handlePause(self,canvas, paused):
+        if not paused: return
         self.pauseCounter += 0.1
         self.pauseCounter %= 100
         canvas.draw_circle((WIDTH/2,HEIGHT/2), 
@@ -117,7 +114,7 @@ class Interaction:
 
     def handleGameWin(self): 
         # Clear all the lists
-        self.game.newRound(game.lastRoundCount+1)
+        self.game.newRound(game.roundCount+1)
         self.projectiles.clear()
         self.explosions.clear()
         #self.game.enemies.clear()

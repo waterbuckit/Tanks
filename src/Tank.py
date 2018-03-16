@@ -12,7 +12,9 @@ class Tank:
     defHeight = 20
     defRadius = defWidth * 1.414
 
-    def __init__(self, pos, lines):
+    def __init__(self, pos, game):
+        self.game = game
+        self.linesRef = game.terrain.lines
         self.rotation = 0
         self.width = Tank.defWidth
         self.height = Tank.defHeight
@@ -29,7 +31,7 @@ class Tank:
         self.reloadCounter = self.interval
         self.trackCount = 0
         self.trackMarks = []
-        self.linesRef = lines
+
     
     def getPosAndRadius(self):
         return self.pos.getP(), self.boundingCircleRadius
@@ -155,8 +157,10 @@ class Turret:
         difference = angle - self.rotation
         self.rotation += difference
         self.generator.rotate(difference)
+
     def patrol(self):
         self.updateRotationByDeg()
+
     def updateRotationByDeg(self):
         self.patrolCount += 1
         self.patrolCount %= 360

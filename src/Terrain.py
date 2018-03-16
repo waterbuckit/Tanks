@@ -69,10 +69,10 @@ class Terrain:
         for i in range(len(self.walls)-1):
             self.lines.append(Line(Vector(self.walls[i].x, self.walls[i].y), Vector(self.walls[i+1].x,
                 self.walls[i+1].y)))
-        self.lines.append(Line(Vector(3,3), Vector(3, self.height-3)))
-        self.lines.append(Line(Vector(3,self.height-3), Vector(self.width-3, self.height-3)))
-        self.lines.append(Line(Vector(self.width-3, self.height-3), Vector(self.width-3, 3)))
-        self.lines.append(Line(Vector(self.width-3, 3), Vector(3, 3)))
+        self.lines.append(Line(Vector(0, 0), Vector(0, self.height)))
+        self.lines.append(Line(Vector(0, self.height), Vector(self.width, self.height)))
+        self.lines.append(Line(Vector(self.width, self.height), Vector(self.width, 0)))
+        self.lines.append(Line(Vector(self.width, 0), Vector(0, 0)))
 	
     def drawWalls(self, canvas):
         for line in self.lines:

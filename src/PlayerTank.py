@@ -3,8 +3,8 @@ from Tank import *
 
 class PlayerTank(Tank):
     
-    def __init__(self, pos, lines):
-        Tank.__init__(self, pos, lines)
+    def __init__(self, pos, game):
+        Tank.__init__(self, pos, game)
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.turret = PlayerTurret(self, pos)
