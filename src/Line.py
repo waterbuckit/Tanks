@@ -46,7 +46,7 @@ class DottedLine:
 
     def draw(self, canvas):
         newVel = self.vel.copy()/self.interval
-        color = '#202020'
+        color = '#505050'
         for i in range(self.interval):
             if (i % 5 == 0):
                 canvas.draw_line((self.pA+(newVel*i)).getP(), (self.pA+(newVel*(i+1))).getP(), self.thickness, color)

@@ -44,7 +44,7 @@ class Terrain:
             newList.append((aList[i][0], aList[i][1]))	
         return newList
 
-    def genMaze(self, width, height, x, y):
+    def genMaze(self, x, y):
         while self.stack:
             pointer = self.stack[-1]
             self.walls.append(Vector(pointer[0], pointer[1]))
@@ -53,7 +53,7 @@ class Terrain:
                     (pointer[0]-self.pathSize, pointer[1]),
                     (pointer[0], pointer[1]+self.pathSize),
                     (pointer[0], pointer[1]-self.pathSize)]
-            validNeigh = self.valid(neigh, width, height)
+            validNeigh = self.valid(neigh, self.width, self.height)
             random.shuffle(validNeigh)
             if(len(validNeigh)==0):
                 self.visited.append((pointer[0],pointer[1]))
