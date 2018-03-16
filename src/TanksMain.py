@@ -1,4 +1,7 @@
-#<<<<<<< HEAD
+#░▀█▀░█▀█░█▀█░█░█░█▀▀
+#░░█░░█▀█░█░█░█▀▄░▀▀█
+#░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀
+
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from Tank import Tank
@@ -27,14 +30,15 @@ class Interaction:
        self.enemies = []
        self.trails = []
        self.currentlyColliding = {}
-       self.startEnemies = 0
        self.pauseCounter = 100
        self.isPaused = False
        self.setMappings()
        self.mousePos = self.player.pos
 
     def update(self):
-        self.mousePos = self.getMousePos()
+        self.mousePos = self.getMousePos() 
+        if(len(self.enemies) == 0):
+            self.handleGameWin()
         for explosion in self.explosions:
             explosion.update()
             if explosion.isFinished():
@@ -110,7 +114,20 @@ class Interaction:
         canvas.draw_circle((WIDTH/2,HEIGHT/2), 
                 Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1,
                 "#accaf9", "#accaf9")
-    
+
+    def handleGameWin(self): 
+        # Clear all the lists
+        self.projectiles.clear()
+        self.explosions.clear()
+        self.enemies.clear()
+        self.trails.clear()
+        self.currentlyColliding.clear()
+        self.terrain = Terrain(WIDTH, HEIGHT)
+        self.terrain.genMaze(WIDTH, HEIGHT, 0, 0)
+        self.setMappings()
+        for t in range(5):
+            i.addEnemy(Tank(Tank.newTankPos(terrain, WIDTH, HEIGHT),i.terrain.lines))
+
     def mouseClickHandler(self, position):
         self.addProjectile(self.player, "shell", Vector(position[0], position[1]))
 
@@ -148,7 +165,8 @@ class Interaction:
             shot = origin.turret.shoot(target, type)
         if shot is not None: 
             self.projectiles.append(shot)
-            self.trails.append(SmokeTrail(shot, self.projectiles))
+            if(not shot.projType == "mg"):
+                self.trails.append(SmokeTrail(shot, self.projectiles))
     
     def addProjlessExplosion(self, pos):
         self.explosions.append(Explosion(pos, "tankKill"))
@@ -207,10 +225,9 @@ terrain = Terrain(WIDTH, HEIGHT)
 terrain.genMaze(WIDTH, HEIGHT, 0, 0)
 
 i = Interaction(Keyboard(), terrain)
-for t in range(10):
+for t in range(5):
      i.addEnemy(Tank(Tank.newTankPos(terrain, WIDTH, HEIGHT),i.terrain.lines))
 
-i.startEnemies = len(i.enemies)
 # Frame initialisation
 frame = simplegui.create_frame('Tanks', WIDTH, HEIGHT)
 frame.set_mouseclick_handler(i.mouseClickHandler)
