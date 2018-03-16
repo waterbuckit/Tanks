@@ -216,7 +216,6 @@ class Keyboard:
 
 game = Game(1200, 800)
 i = Interaction(Keyboard(), game)
-i.startEnemies = len(game.enemies)
 simplegui.pygame.mouse.set_visible(False)
 
 # Frame initialisation
