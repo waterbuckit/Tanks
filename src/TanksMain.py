@@ -32,8 +32,6 @@ class Interaction:
        self.isPaused = False
        self.setMappings()
        self.mousePos = self.player.pos
-       for line in self.terrain.lines:
-           self.currentlyColliding[(self.player, line)] = False
 
     def update(self):
         self.mousePos = self.getMousePos()
@@ -54,7 +52,9 @@ class Interaction:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile)
                     enemy.decreaseHealth(projectile.getType())
-
+                    if(enemy.health <= 0):
+                        self.addProjlessExplosion(enemy.pos)
+                        self.enemies.remove(enemy)
         for trail in self.trails:
             if(trail.isFinished()):
                 self.trails.remove(trail)
@@ -149,6 +149,9 @@ class Interaction:
         if shot is not None: 
             self.projectiles.append(shot)
             self.trails.append(SmokeTrail(shot, self.projectiles))
+    
+    def addProjlessExplosion(self, pos):
+        self.explosions.append(Explosion(pos, "tankKill"))
 
     def addExplosion(self, source):
         if(source in self.projectiles):

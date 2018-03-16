@@ -16,6 +16,8 @@ class Explosion:
                 self.particles.append(Particle(self.pos.copy(), 24, Vector(random.uniform(-10,10), random.uniform(-10, 10))))
             elif(self.projType == "homing"):
                 self.particles.append(Particle(self.pos.copy(), 231, Vector(random.uniform(-20,20), random.uniform(-20, 20)))) 
+            elif(self.projType == "tankKill"):
+                self.particles.append(Particle(self.pos.copy(), 360, Vector(random.uniform(-30,30), random.uniform(-30,30))))
             else:
                 self.particles.append(Particle(self.pos.copy(), 66, Vector(random.uniform(-3,3), random.uniform(-3, 3))))
                 
