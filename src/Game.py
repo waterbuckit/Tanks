@@ -12,12 +12,16 @@ class Game:
         self.currentRound = None
         self.enemies = []
         self.terrain = Terrain(self.canvasWidth, self.canvasHeight)
-        self.player = PlayerTank(Tank.newTankPos(self.terrain, self.canvasWidth, self.canvasHeight), self.terrain.lines)
+        self.player = self.newPlayer()
 
     def newRound(self, enemyCount):
        self.terrain = Terrain(self.canvasWidth, self.canvasHeight)
        self.terrain.genMaze(0,0)
+       self.player = self.newPlayer()
        for i in range(enemyCount):
            self.enemies.append(Tank(Tank.newTankPos(self.terrain, self.canvasWidth,
                                           self.canvasHeight), self.terrain.lines))
        self.lastRoundCount = enemyCount
+
+    def newPlayer(self):
+        return PlayerTank(Tank.newTankPos(self.terrain, self.canvasWidth, self.canvasHeight), self.terrain.lines)
