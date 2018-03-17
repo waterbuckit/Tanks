@@ -1,7 +1,6 @@
-# Item Pickup
-import PlayerTank
+from Tank import Tank
 
-class ApplyItemPickUp(PlayerTank):
+class ApplyItemPickUp(Tank):
 
     def __init__(self):
         self.maxHealth = 100.0
@@ -46,7 +45,3 @@ class ApplyItemPickUp(PlayerTank):
         duration = 30
         totalHP = self.health + shieldHP
         return totalHP, duration
-
-
-
-

@@ -18,6 +18,9 @@ class Terrain:
         self.width = width
         self.height = height
 
+        self.pickupItems =[]
+        self.genRandomPoint()
+
     def outFrame(self, x, y, width, height):
         if x < 0+self.pathSize or y < 0+self.pathSize or x > width-self.pathSize or y > height-self.pathSize:
             return True
@@ -30,6 +33,30 @@ class Terrain:
     def inStack(self, x, y):
         for i in range(len(self.stack)):
             if (x, y) == (self.stack[i][0], self.stack[i][1]):
+                return True
+    
+    def genRandomPoint(self):
+        listOfPoints = []
+        #Adds pick up to random coords not on a line
+        for i in range(0, 5):
+            point = Vector(random.randint(0, 1200), random.randint(0, 800))
+            if not(self.inWalls(point)) and not(self.inWallRadius(point)):
+                self.pickupItems.append(point)
+				
+    def drawItemPickUp(self, canvas, player):
+        LINE_WIDTH = 2
+        self.pickupItems = player.pickUpItem(self.pickupItems)
+        for item in self.pickupItems:
+            canvas.draw_circle(item.getP(), 10, LINE_WIDTH, 'Red', 'Red')
+
+    def inWallRadius(self, point):
+        for line in self.lines:
+            if(line.distanceTo(point)< line.thickness + 10*2 + 30):
+                return True
+    
+    def inWalls(self, point):
+        for i in range(len(self.walls)):
+            if(point == self.walls[i]):
                 return True
 
     def valid(self, aList, width, height):

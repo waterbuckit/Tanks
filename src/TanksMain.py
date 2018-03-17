@@ -92,6 +92,7 @@ class Interaction:
         if not self.keyboard.p:
             self.update()
         self.game.terrain.drawWalls(canvas)
+        self.game.terrain.drawItemPickUp(canvas, self.game.player)
         self.game.drawInfo(canvas)
         for enemy in self.game.enemies:
             enemy.draw(canvas)
