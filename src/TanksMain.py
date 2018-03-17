@@ -53,6 +53,17 @@ class Interaction:
             if not projectile.isWithinRange() or self.hitWall(projectile):
                 self.addExplosion(projectile)
                 continue
+            # colliding with shield
+            if(projectile.isColliding((self.game.player.pos.getP(), self.game.player.shieldSize)) 
+                    and self.game.player.shield > 0):
+                self.addExplosion(projectile)
+                self.game.player.decreaseShield(projectile.getType())
+                continue
+            # colliding with the actual player
+            if(projectile.isColliding((self.game.player.getPosAndRadius()))):
+                self.addExplosion(projectile)
+                self.game.player.decreaseHealth(projectile.getType())
+                continue
             for enemy in self.game.enemies:
                 if projectile.isColliding(enemy.getPosAndRadius()):
                     self.addExplosion(projectile)
