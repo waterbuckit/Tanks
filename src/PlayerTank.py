@@ -143,19 +143,10 @@ class ShieldHitmark:
         canvas.draw_circle(self.pos.getP(),3,3,self.colour, self.colour)
     
     def update(self, base):
-        #if(self.alpha <= self.ceiling):
-        #    self.increaseAlpha()
-        #else:
         self.pos = Vector(
                 base.x + (PlayerTank.shieldSize * math.cos(math.radians(self.angle))),
                 base.y + (PlayerTank.shieldSize * math.sin(math.radians(self.angle)))) 
         self.decreaseAlpha()
-
-   # def increaseAlpha(self):
-   #     if((self.alpha + 0.1) < 0.95): 
-   #         print("increasing alpha!")
-   #         self.alpha += 0.05
-   #         self.colour = simpleguiUtils.hsla(170, 100, 80, self.alpha)
 
     def decreaseAlpha(self):
         self.alpha -= 0.02
