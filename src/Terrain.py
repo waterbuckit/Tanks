@@ -4,12 +4,14 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 from Line import Line
+from ItemPickUp import ItemPickUp
 import random, sys
 
 sys.setrecursionlimit(10000)
 
 class Terrain:
-    def __init__(self, width, height):
+    def __init__(self, width, height, game):
+        self.game = game
         self.walls = []
         self.pathSize = 125
         self.stack = [(self.pathSize,self.pathSize)]
@@ -40,17 +42,11 @@ class Terrain:
         while len(self.pickupItems) < 5:
             point = Vector(random.randint(0, 1200), random.randint(0, 800))
             if not(self.inWalls(point)) and not(self.inWallRadius(point)):
-                self.pickupItems.append(point)
-				
-    def drawItemPickUp(self, canvas, player):
-        LINE_WIDTH = 2
-        self.pickupItems = player.pickUpItem(self.pickupItems)
-        for item in self.pickupItems:
-            canvas.draw_circle(item.getP(), self.itemRadius, LINE_WIDTH, 'Red', 'Red')
+                self.pickupItems.append(ItemPickUp(point, self.game))
 
     def inWallRadius(self, point):
         for line in self.lines:
-            if(line.distanceTo(point) <= line.thickness + self.itemRadius*5):
+            if(line.distanceTo(point) <= line.thickness + 25):
                 return True
     
     def inWalls(self, point):

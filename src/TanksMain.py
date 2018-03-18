@@ -10,6 +10,7 @@ from PlayerTank import PlayerTank
 from Explosion import Explosion
 from Terrain import Terrain
 from Menu import Menu
+from ItemPickUp import ItemPickUp
 from Projectile import *
 import math
 import Util
@@ -48,6 +49,9 @@ class Interaction:
         for enemy in self.game.enemies:
             enemy.update(self.game.player)
             self.addProjectile(enemy, "shell", enemy.turret.aim(self.game.player))
+        for item in self.game.terrain.pickupItems:
+            if self.game.player.pickUpItem(item):
+                self.game.terrain.pickupItems.remove(item)
         for projectile in self.projectiles:
             projectile.update()
             if not projectile.isWithinRange() or self.hitWall(projectile):
@@ -106,10 +110,11 @@ class Interaction:
         if not self.keyboard.p:
             self.update()
         self.game.terrain.drawWalls(canvas)
-        self.game.terrain.drawItemPickUp(canvas, self.game.player)
         self.game.drawInfo(canvas)
         for enemy in self.game.enemies:
             enemy.draw(canvas)
+        for item in self.game.terrain.pickupItems:
+            item.draw(canvas, ItemPickUp.types[item.type])
         for projectile in self.projectiles:
             projectile.draw(canvas)
         for explosion in self.explosions:

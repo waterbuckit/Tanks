@@ -19,7 +19,7 @@ class Game:
 
     def newRound(self, enemyCount):
        self.enemies.clear()
-       self.terrain = Terrain(self.canvasWidth, self.canvasHeight)
+       self.terrain = Terrain(self.canvasWidth, self.canvasHeight, self)
        self.terrain.genMaze(0,0)
        for i in range(enemyCount):
            self.enemies.append(Tank(Tank.newTankPos(self.terrain, self.canvasWidth,
