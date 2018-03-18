@@ -3,7 +3,9 @@ import SimpleGUICS2Pygame.codeskulptor_lib as simpleguitools
 import math
 from Vector import Vector
 import copy
+
 class Projectile:
+
     def __init__(self, pos, vel, speed, projType, rng=500, isTrailed=True, rad=3, color='White'):
         self.projType = projType
         self.pos = pos

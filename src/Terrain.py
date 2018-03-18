@@ -39,7 +39,7 @@ class Terrain:
     def genRandomPoint(self):
         listOfPoints = []
         #Adds pick up to random coords not on a line
-        while len(self.pickupItems) < 5:
+        while len(self.pickupItems) < random.randrange(2,5):
             point = Vector(random.randint(0, 1200), random.randint(0, 800))
             if not(self.inWalls(point)) and not(self.inWallRadius(point)):
                 self.pickupItems.append(ItemPickUp(point, self.game))

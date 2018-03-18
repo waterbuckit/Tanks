@@ -3,7 +3,7 @@ import random
 
 class ItemPickUp():
 
-    types = {"health":"Green", "shieldStatus":"Blue", "ammo":"Brown"}
+    types = {"health":"Green", "shieldStatus":"Blue", "ammo":"Brown", "missile":"Grey"}
     sizes = [3, 6, 9]
 
     def __init__(self, pos, game):
@@ -18,8 +18,10 @@ class ItemPickUp():
        elif self.type == "shieldStatus":
            self.applyShield(player)
        elif self.type == "ammo":
-           pass
            #self.loadAmmo()
+           pass
+       elif self.type == "missile":
+            self.loadHoming(player)
 
     def applyHealth(self, player):
         if self.radius == ItemPickUp.sizes[0]:
@@ -50,6 +52,9 @@ class ItemPickUp():
             if player.shieldStatus > player.maxHealth:
                 player.shieldStatus = player.maxHealth
         print(player.shieldStatus)
+
+    def loadHoming(self, player):
+        player.homingCount += self.radius/3
 
     def loadAmmo(self, type):
         if type == 'AP':

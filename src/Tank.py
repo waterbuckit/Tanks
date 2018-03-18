@@ -31,6 +31,7 @@ class Tank:
         self.reloadCounter = self.interval
         self.trackCount = 0
         self.trackMarks = []
+        self.homingCount = 0
     
     def getPosAndRadius(self):
         return self.pos.getP(), self.boundingCircleRadius
@@ -146,7 +147,7 @@ class Turret:
         self.pos = pos
 
     def getMuzzlePos(self):
-        return self.pos + self.generator.copy().rotate(135) * 2.6
+        return self.pos + self.generator.copy().rotate(135) * 3
 
     def updateRotation(self, newPos):
         xLength = newPos.x - self.pos.x
@@ -176,6 +177,7 @@ class Turret:
             self.base.recoil(shot)
         elif type == "homing":
             shot = HomingProjectile(self.getMuzzlePos(), targetVel)
+            self.base.homingCount -= 1 
         self.base.readyToFire = False
         self.base.reloadCounter = 0
         return shot

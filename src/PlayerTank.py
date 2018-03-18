@@ -84,15 +84,15 @@ class PlayerTank(Tank):
                 (self.cursor.get_width(), self.cursor.get_height()), self.mousePos, (20, 20))
         self.drawReloadStatus(canvas, self.mousePos, 9)
         # draw shield status (currently made specific to player tank)
-        canvas.draw_line(
-                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 30), 
-                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 30), 3, '#032459')
-        canvas.draw_line(
-                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 30), 
-                (self.pos.x - (self.width/2) + ((self.shieldStatus/100)*self.width),
-                    self.pos.y + (self.height/2) + 30), 3, '#8eddff')
         if(self.shieldStatus > 0):
             self.shield.draw(canvas)
+            canvas.draw_line(
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 30), 
+                (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 30), 3, '#032459')
+            canvas.draw_line(
+                (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 30), 
+                (self.pos.x - (self.width/2) + ((self.shieldStatus/100)*self.width),
+                self.pos.y + (self.height/2) + 30), 3, '#8eddff')
         Tank.draw(self, canvas)
 
     # Draws the circle surrounding the cursor point indicating how "reloaded" the tank is
@@ -166,7 +166,9 @@ class PlayerTurret(Turret):
             shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-clickedVel).length())
             self.base.recoil(shot)
         elif type == "homing":
+            if self.base.homingCount <= 0: return
             shot = HomingProjectile(self.getMuzzlePos(), targetVel)
+            self.base.homingCount -= 1
         self.base.readyToFire = False
         self.base.reloadCounter = 0
         return shot
