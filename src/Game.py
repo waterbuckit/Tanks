@@ -44,5 +44,5 @@ class Game:
         return player
 
     def drawInfo(self, canvas):
-        canvas.draw_text("Round: " + str(self.player.health), (10, 20), 20, "White")
+        canvas.draw_text("Round: " + str(self.roundCount), (10, 20), 20, "White")
         canvas.draw_text("Lives: " + str(self.roundLives), (10, 40), 20, "White")
