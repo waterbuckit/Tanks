@@ -15,29 +15,34 @@ class Game:
         self.playerClonePos = None
         self.terrain = None
         self.player = None
+        self.gameOverStatus = False
         self.roundLives = 3
 
     def newRound(self, enemyCount):
-       self.enemies.clear()
-       self.terrain = Terrain(self.canvasWidth, self.canvasHeight, self)
-       self.terrain.genMaze(0,0)
-       for i in range(enemyCount):
-           self.enemies.append(Tank(Tank.newTankPos(self.terrain, self.canvasWidth,
-                                          self.canvasHeight), self))
-       self.enemyPositions = list(self.enemies)
-       self.player = self.newPlayer()
-       self.playerClonePos = self.player.pos.copy()
-       self.roundCount = enemyCount
+        self.enemies.clear()
+        self.terrain = Terrain(self.canvasWidth, self.canvasHeight, self)
+        self.terrain.genMaze(0,0)
+        for i in range(enemyCount):
+            self.enemies.append(Tank(Tank.newTankPos(self.terrain, self.canvasWidth,
+                                           self.canvasHeight), self))
+        self.enemyPositions = list(self.enemies)
+        self.player = self.newPlayer()
+        self.playerClonePos = self.player.pos.copy()
+        self.roundCount = enemyCount
 
     def playerDeath(self):
-       if self.roundLives <= 0:
-           self.gameOver()
-       self.player.pos = self.playerClonePos.copy()
-       self.enemies = list(self.enemyPositions)
-       self.player.health = 100
-       self.player.shield = 100
-       self.player.trackMarks.clear()
-       self.roundLives -= 1
+        if self.roundLives <= 0:
+            self.gameOver()
+            return
+        self.player.pos = self.playerClonePos.copy()
+        self.enemies = list(self.enemyPositions)
+        self.player.health = 100
+        self.player.shieldStatus = 100
+        self.player.trackMarks.clear()
+        self.roundLives -= 1
+
+    def gameOver(self):
+        self.gameOverStatus = True
 
     def newPlayer(self):
         player = PlayerTank(Tank.newTankPos(self.terrain, self.canvasWidth, self.canvasHeight), self)

@@ -38,6 +38,10 @@ class Interaction:
            self.currentlyColliding[(self.game.player, line)] = False
 
     def update(self):
+        if self.game.gameOverStatus:
+            self.keyboard.menu = True
+            self.game = Game(1200,800)
+            self.game.newRound(1)
         self.mousePos = self.getMousePos() 
         if(len(self.game.enemies) == 0):
             self.handleGameWin()
@@ -103,7 +107,7 @@ class Interaction:
                 self.currentlyColliding[(self.game.player, line)] = False
         self.game.player.update(self.keyboard.forwards, self.keyboard.backwards, 
                 self.keyboard.left, self.keyboard.right, self.mousePos.getP())
-         
+                
     def drawHandler(self, canvas):
         if self.keyboard.menu:
             self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT)
@@ -111,7 +115,6 @@ class Interaction:
         if not self.keyboard.p:
             self.update()
         self.game.terrain.drawWalls(canvas)
-        self.game.drawInfo(canvas)
         for enemy in self.game.enemies:
             enemy.draw(canvas)
         for item in self.game.terrain.pickupItems:
@@ -124,6 +127,7 @@ class Interaction:
             trail.draw(canvas)
         self.game.player.draw(canvas)
         self.handlePause(canvas, self.keyboard.p)
+        self.game.drawInfo(canvas)
 
     def handlePause(self,canvas, paused):
         if not paused: return
