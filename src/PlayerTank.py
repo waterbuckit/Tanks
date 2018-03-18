@@ -1,9 +1,11 @@
 from Line import *
 from Tank import *
+import SimpleGUICS2Pygame.codeskulptor_lib as simpleguiUtils
+import math
 
 class PlayerTank(Tank):
    
-    shieldSize = Tank.defRadius + 10
+    shieldSize = Tank.defRadius + 5
 
     def __init__(self, pos, game):
         Tank.__init__(self, pos, game)
@@ -11,7 +13,8 @@ class PlayerTank(Tank):
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
         self.turret = PlayerTurret(self, pos)
         self.counter = 100
-        self.shield = 100
+        self.shieldStatus = 100
+        self.shield = Shield(self)
         self.isColliding = False
     
     def recoil(self, shot):
@@ -47,11 +50,9 @@ class PlayerTank(Tank):
 
     def decreaseShield(self, projType):
         if(projType == "shell"):
-            self.shield -= 15
-        elif(projType == "homing"):
-            self.heath -= 25
-        else:
-            self.health -= 3
+            self.shieldStatus -= 15
+            if(self.shieldStatus < 0):
+                self.shieldStatus = 0
 
     def pickUpItem(self, items):
         pickUpRadius = 10
@@ -82,6 +83,7 @@ class PlayerTank(Tank):
             self.updateRotationLeft()
         self.mousePos = mousePos
         Tank.update(self, mousePos)
+        self.shield.update()
 
     def draw(self, canvas):
         # draws a the line from the muzzle to the cursor position
@@ -95,8 +97,10 @@ class PlayerTank(Tank):
                 (self.pos.x + (self.width/2), self.pos.y + (self.height/2) + 30), 3, '#032459')
         canvas.draw_line(
                 (self.pos.x - (self.width/2), self.pos.y + (self.height/2) + 30), 
-                (self.pos.x - (self.width/2) + ((self.shield/100)*self.width), self.pos.y + (self.height/2) + 30), 3, '#8eddff')
-        canvas.draw_circle((self.pos.x, self.pos.y), self.shieldSize, 2, '#8eddff')
+                (self.pos.x - (self.width/2) + ((self.shieldStatus/100)*self.width),
+                    self.pos.y + (self.height/2) + 30), 3, '#8eddff')
+        if(self.shieldStatus > 0):
+            self.shield.draw(canvas)
         Tank.draw(self, canvas)
 
     # Draws the circle surrounding the cursor point indicating how "reloaded" the tank is
@@ -105,6 +109,67 @@ class PlayerTank(Tank):
         for i in range(int(angle)):
             canvas.draw_point((mousePos[0]+(radius*math.cos(math.radians(i))),
                 mousePos[1]+(radius*math.sin(math.radians(i)))), 'White')
+
+class Shield:
+    def __init__(self, base):
+        self.base = base
+        # god knows why I did this retarded naming but laziness prevails
+        self.shieldRadius = base.shieldSize
+        self.shieldHitmarks = []
+    
+    def update(self):
+        for hitmark in self.shieldHitmarks:
+            hitmark.update(self.base.pos)
+            if(hitmark.alpha <= 0.05):
+                self.shieldHitmarks.remove(hitmark)
+
+    def draw(self, canvas):
+        canvas.draw_circle((self.base.pos.x, self.base.pos.y), self.shieldRadius, 2, '#d9dadb')
+        for hitmark in self.shieldHitmarks:
+            hitmark.draw(canvas)
+
+    # take the position of the hit and spread the mark around that position(like +- 20 degrees)
+    def receiveHit(self, pos):
+        xLength = pos.x - self.base.pos.x
+        yLength = pos.y - self.base.pos.y
+        angle = math.degrees(math.atan2(yLength,xLength))
+        for i in range(int(angle - 30),int(angle + 30)):
+            self.shieldHitmarks.append(ShieldHitmark(Vector(
+                self.base.pos.x + (self.shieldRadius * math.cos(math.radians(i % 360))),
+                self.base.pos.y + (self.shieldRadius * math.sin(math.radians(i % 360)))),i%360))
+
+class ShieldHitmark:
+    def __init__(self, pos, angle):
+        self.pos = pos
+        self.angle = angle
+        self.alpha = 1.0
+        self.brightness = 100
+        self.ceiling = 0.94 
+        self.colour = simpleguiUtils.hsla(170, 100, 90,self.alpha) 
+    
+    def draw(self, canvas):
+        canvas.draw_circle(self.pos.getP(),3,3,self.colour, self.colour)
+    
+    def update(self, base):
+        #if(self.alpha <= self.ceiling):
+        #    self.increaseAlpha()
+        #else:
+        self.pos = Vector(
+                base.x + (PlayerTank.shieldSize * math.cos(math.radians(self.angle))),
+                base.y + (PlayerTank.shieldSize * math.sin(math.radians(self.angle)))) 
+        self.decreaseAlpha()
+
+   # def increaseAlpha(self):
+   #     if((self.alpha + 0.1) < 0.95): 
+   #         print("increasing alpha!")
+   #         self.alpha += 0.05
+   #         self.colour = simpleguiUtils.hsla(170, 100, 80, self.alpha)
+
+    def decreaseAlpha(self):
+        self.alpha -= 0.02
+        self.brightness -= 1
+        if(self.alpha > 0.02):
+            self.colour = simpleguiUtils.hsla(170, 100, self.brightness, self.alpha)
 
 class PlayerTurret(Turret):
 

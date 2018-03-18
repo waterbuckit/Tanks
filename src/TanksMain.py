@@ -55,9 +55,10 @@ class Interaction:
                 continue
             # colliding with shield
             if(projectile.isColliding((self.game.player.pos.getP(), self.game.player.shieldSize)) 
-                    and self.game.player.shield > 0):
+                    and self.game.player.shieldStatus > 0):
                 self.addExplosion(projectile)
-                self.game.player.decreaseShield(projectile.getType())
+                self.game.player.shield.receiveHit(projectile.pos)
+                #self.game.player.decreaseShield(projectile.getType())
                 continue
             # colliding with the actual player
             if(projectile.isColliding((self.game.player.getPosAndRadius()))):
