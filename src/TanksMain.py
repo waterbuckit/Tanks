@@ -63,6 +63,9 @@ class Interaction:
             if(projectile.isColliding((self.game.player.getPosAndRadius()))):
                 self.addExplosion(projectile)
                 self.game.player.decreaseHealth(projectile.getType())
+                if self.game.player.health <= 0:
+                    self.game.playerDeath()
+                    break
                 continue
             for enemy in self.game.enemies:
                 if projectile.isColliding(enemy.getPosAndRadius()):

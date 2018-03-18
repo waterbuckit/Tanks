@@ -49,7 +49,7 @@ class PlayerTank(Tank):
         if(projType == "shell"):
             self.shield -= 15
         elif(projType == "homing"):
-            self.heath -= 25
+            self.health -= 25
         else:
             self.health -= 3
 
@@ -60,6 +60,7 @@ class PlayerTank(Tank):
             if(distance < pickUpRadius + 3):
                 # remove item from the map
                 # apply item pickup
+                print("HI PICKUP")
                 self.applyHealthPack()
                 items.remove(item)
         return items

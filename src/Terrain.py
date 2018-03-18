@@ -17,9 +17,8 @@ class Terrain:
         self.lines = []
         self.width = width
         self.height = height
-
         self.pickupItems =[]
-        self.genRandomPoint()
+        self.itemRadius = 10
 
     def outFrame(self, x, y, width, height):
         if x < 0+self.pathSize or y < 0+self.pathSize or x > width-self.pathSize or y > height-self.pathSize:
@@ -38,7 +37,7 @@ class Terrain:
     def genRandomPoint(self):
         listOfPoints = []
         #Adds pick up to random coords not on a line
-        for i in range(0, 5):
+        while len(self.pickupItems) < 5:
             point = Vector(random.randint(0, 1200), random.randint(0, 800))
             if not(self.inWalls(point)) and not(self.inWallRadius(point)):
                 self.pickupItems.append(point)
@@ -47,11 +46,11 @@ class Terrain:
         LINE_WIDTH = 2
         self.pickupItems = player.pickUpItem(self.pickupItems)
         for item in self.pickupItems:
-            canvas.draw_circle(item.getP(), 10, LINE_WIDTH, 'Red', 'Red')
+            canvas.draw_circle(item.getP(), self.itemRadius, LINE_WIDTH, 'Red', 'Red')
 
     def inWallRadius(self, point):
         for line in self.lines:
-            if(line.distanceTo(point)< line.thickness + 10*2 + 30):
+            if(line.distanceTo(point) <= line.thickness + self.itemRadius*5):
                 return True
     
     def inWalls(self, point):
@@ -100,6 +99,7 @@ class Terrain:
         self.lines.append(Line(Vector(0, self.height), Vector(self.width, self.height)))
         self.lines.append(Line(Vector(self.width, self.height), Vector(self.width, 0)))
         self.lines.append(Line(Vector(self.width, 0), Vector(0, 0)))
+        self.genRandomPoint()
 	
     def drawWalls(self, canvas):
         for line in self.lines:
