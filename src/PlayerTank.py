@@ -15,6 +15,7 @@ class PlayerTank(Tank):
         self.counter = 100
         self.shieldStatus = 100
         self.shield = Shield(self)
+        self.maxHealth = 100
         self.isColliding = False
     
     def recoil(self, shot):
@@ -53,24 +54,15 @@ class PlayerTank(Tank):
             self.shieldStatus -= 15
             if(self.shieldStatus < 0):
                 self.shieldStatus = 0
+        elif(projType == "homing"):
+            self.health -= 25
+        else:
+            self.health -= 3
 
-    def pickUpItem(self, items):
-        pickUpRadius = 10
-        for item in items:
-            distance = item.getDistance(self.pos)
-            if(distance < pickUpRadius + 3):
-                # remove item from the map
-                # apply item pickup
-                self.applyHealthPack()
-                items.remove(item)
-        return items
-
-    def applyHealthPack(self):
-        maxHealth = 100
-        self.health += 25
-        if self.health > maxHealth:
-            self.health == maxHealth
-
+    def pickUpItem(self, item):
+        if((self.pos - item.pos).length() <= item.radius*2):
+            item.pickupAction(self)
+            return True
 
     def update(self, forwards, backwards, left, right, mousePos):
         if(forwards):

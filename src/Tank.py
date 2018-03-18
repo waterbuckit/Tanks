@@ -31,7 +31,6 @@ class Tank:
         self.reloadCounter = self.interval
         self.trackCount = 0
         self.trackMarks = []
-
     
     def getPosAndRadius(self):
         return self.pos.getP(), self.boundingCircleRadius

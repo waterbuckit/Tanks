@@ -1,29 +1,55 @@
 from Tank import Tank
+import random
 
-class ApplyItemPickUp(Tank):
+class ItemPickUp():
 
-    def __init__(self):
-        self.maxHealth = 100.0
-        self.damage = 0
-        self.ammoAP = 0
-        self.ammoAtom = 0
-        self.ammoReg = -1
+    types = {"health":"Green", "shield":"Blue", "ammo":"Brown"}
+    sizes = [3, 6, 9]
 
-    def applyHealthPack(self, type):
-        if type == 's':
-            self.health += 10
-            if self.health> self.maxHealth:
-                self.health == self.maxHealth
-        elif type == 'm':
-            self.health += 30
-            if self.health > self.maxHealth:
-                self.health == self.maxHealth
-        elif type == 'l':
-            self.health += 50
-            if self.health > self.maxHealth:
-                self.health == self.maxHealth
-        return self.health
+    def __init__(self, pos, game):
+        self.type = random.choice(list(ItemPickUp.types.keys()))
+        self.radius = random.choice(ItemPickUp.sizes)
+        self.pos = pos
+        self.game = game
 
+    def pickupAction(self, player):
+       if self.type == "health":
+           self.applyHealth(player)
+       elif self.type == "shield":
+           self.applyShield(player)
+       elif self.type == "ammo":
+           pass
+           #self.loadAmmo()
+
+    def applyHealth(self, player):
+        if self.radius == ItemPickUp.sizes[0]:
+            player.health += 10
+            if player.health > player.maxHealth:
+                player.health = player.maxHealth
+        elif self.radius == ItemPickUp.sizes[1]:
+            player.health += 30
+            if player.health > player.maxHealth:
+                player.health = player.maxHealth
+        elif self.radius == ItemPickUp.sizes[2]:
+            player.health += 50
+            if player.health > player.maxHealth:
+                player.health = player.maxHealth
+        print(player.health)
+
+    def applyShield(self, player):
+        if self.radius == ItemPickUp.sizes[0]:
+            player.shield += 10
+            if player.shield > player.maxHealth:
+                player.shield = player.maxHealth
+        elif self.radius == ItemPickUp.sizes[1]:
+            player.shield += 30
+            if player.shield > player.maxHealth:
+                player.shield = player.maxHealth
+        elif self.radius == ItemPickUp.sizes[2]:
+            player.shield += 50
+            if player.shield > player.maxHealth:
+                player.shield = player.maxHealth
+        print(player.shield)
 
     def loadAmmo(self, type):
         if type == 'AP':
@@ -36,12 +62,5 @@ class ApplyItemPickUp(Tank):
             self.damage = 10
             self.ammo = -1
 
-        return self.damage, self.ammo
-
-
-    def applyShield(self):
-        shieldHP = 50
-        # duration the shield lasts for.
-        duration = 30
-        totalHP = self.health + shieldHP
-        return totalHP, duration
+    def draw(self, canvas, color):
+        canvas.draw_circle(self.pos.getP(), self.radius, self.radius, color, color)
