@@ -3,7 +3,7 @@ import random
 
 class ItemPickUp():
 
-    types = {"health":"Green", "shieldStatus":"Blue", "ammo":"Brown", "missile":"Grey"}
+    types = {"health":"Green", "shieldStatus":"Blue", "missile":"Grey"}
     sizes = [3, 6, 9]
 
     def __init__(self, pos, game):
