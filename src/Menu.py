@@ -5,14 +5,28 @@ class Menu:
     def __init__(self):
         pass
 
-    def drawMenu(self, canvas, showControls, WIDTH, HEIGHT, highscore):
+    def drawMenu(self, canvas, showControls, WIDTH, HEIGHT, highscore, isStartselected, isControlSelected, isHighSelected):
         canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2 - 50), 60, "White")
-        canvas.draw_polygon([(900, 500), (900, 550), (1100, 550), (1100, 500)], 20, "Green", "Green")
-        canvas.draw_text("Press space to Start", (905, 535), 25, "Black")
-        canvas.draw_polygon([(500, 500), (500, 550), (700, 550), (700, 500)], 20, "Yellow", "Yellow")
-        canvas.draw_text("Press c for Controls", (505, 535), 25, "Black")
-        canvas.draw_polygon([(100, 500), (100, 550), (300, 550), (300, 500)], 20, "Red", "Red")
-        canvas.draw_text("press h for HighScore", (105, 535), 23, "Black")
+        if (isStartselected):
+            canvas.draw_polygon([(900, 500), (900, 550), (1100, 550), (1100, 500)], 20, "Lime", "Lime")
+            canvas.draw_text("Press space to Start", (905, 535), 25, "Black")
+        else:
+            canvas.draw_polygon([(900, 500), (900, 550), (1100, 550), (1100, 500)], 20, "Green", "Green")
+            canvas.draw_text("Press space to Start", (905, 535), 25, "Black")
+
+        if (isControlSelected):
+            canvas.draw_polygon([(500, 500), (500, 550), (700, 550), (700, 500)], 20, "Orange", "Orange")
+            canvas.draw_text("Press c for Controls", (505, 535), 25, "Black")
+        else:
+            canvas.draw_polygon([(500, 500), (500, 550), (700, 550), (700, 500)], 20, "Yellow", "Yellow")
+            canvas.draw_text("Press c for Controls", (505, 535), 25, "Black")
+
+        if (isHighSelected):
+            canvas.draw_polygon([(100, 500), (100, 550), (300, 550), (300, 500)], 20, "Maroon", "Maroon")
+            canvas.draw_text("press h for HighScore", (105, 535), 23, "Black")
+        else:
+            canvas.draw_polygon([(100, 500), (100, 550), (300, 550), (300, 500)], 20, "Red", "Red")
+            canvas.draw_text("press h for HighScore", (105, 535), 23, "Black")
 
         if (highscore == True):
             canvas.draw_polygon([(100, 0), (100, 430), (300, 430), (300, 0)], 20, "Black", "Grey")

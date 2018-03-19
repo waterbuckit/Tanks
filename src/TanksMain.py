@@ -114,7 +114,8 @@ class Interaction:
                 
     def drawHandler(self, canvas):
         if self.keyboard.menu:
-            self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT, self.keyboard.showHighScore)
+            self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT, self.keyboard.showHighScore,
+                               self.keyboard.startselect, self.keyboard.controlselect, self.keyboard.highScoreSelect)
             return
         if not self.keyboard.p:
             self.update()
@@ -216,6 +217,9 @@ class Keyboard:
         self.menu = True
         self.showControls = False
         self.showHighScore = False
+        self.startselect = False
+        self.controlselect = False
+        self.highScoreSelect = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -227,7 +231,12 @@ class Keyboard:
         elif(key == simplegui.KEY_MAP['d']):
             self.right = True
         elif(key == simplegui.KEY_MAP['space']):
+            self.startselect = True
             self.space = True
+        elif (key == simplegui.KEY_MAP['c']):
+            self.controlselect = True
+        elif (key == simplegui.KEY_MAP['h']):
+            self.highScoreSelect = True
 
     def keyUp(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -239,14 +248,17 @@ class Keyboard:
         elif(key == simplegui.KEY_MAP['d']):
             self.right = False
         elif(key == simplegui.KEY_MAP['space']):
+            self.startselect = False
             self.space = False
             self.menu = False
         elif(key == simplegui.KEY_MAP['p']):
             self.p = not self.p
         elif(key == simplegui.KEY_MAP['c']):
             self.showControls = not self.showControls
+            self.controlselect = False
         elif(key == simplegui.KEY_MAP['h']):
             self.showHighScore = not self.showHighScore
+            self.highScoreSelect = False
 
 
 
