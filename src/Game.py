@@ -16,7 +16,7 @@ class Game:
         self.terrain = None
         self.player = None
         self.gameOverStatus = False
-        self.roundLives = 3
+        self.roundLives = 0
 
     def newRound(self, enemyCount):
         self.enemies.clear()
@@ -28,6 +28,7 @@ class Game:
         self.player = self.newPlayer()
         self.playerClonePos = self.player.pos.copy()
         self.roundCount = enemyCount
+        self.score += self.roundCount
 
     def playerDeath(self):
         if self.roundLives <= 0:
@@ -51,3 +52,4 @@ class Game:
         canvas.draw_text("ROUND: " + str(self.roundCount), (10, 20), 20, "White")
         canvas.draw_text("LIVES: " + str(self.roundLives), (10, 40), 20, "White")
         canvas.draw_text("MISSILES: " + str(self.player.homingAmmo), (10, 60), 20, "White")
+        canvas.draw_text("Score: " + str(self.score), (10, 80), 20, "White")
