@@ -22,12 +22,15 @@ class Menu:
             highscores = [x.strip() for x in highscores]
             highscores = [int(x) for x in highscores]
             highscores.sort(reverse=True)
-            top10 = highscores[:10]
-            top10 = [str(x) for x in top10]
+            if (len(highscores) < 10):
+                top = highscores[:len(highscores)]
+            else:
+                top = highscores[:10]
+            top = [str(x) for x in top]
             y = 30
             z = 1
-            for x in range(0,10):
-                canvas.draw_text(str(z) + " :  "+ top10[x], (180, 50 + y), 20, "Black")
+            for x in range(0,len(top)):
+                canvas.draw_text(str(z) + " :  "+ top[x], (180, 50 + y), 20, "Black")
                 z += 1
                 y += 30
 
