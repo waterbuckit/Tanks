@@ -40,6 +40,7 @@ class Interaction:
 
     def update(self):
         if self.game.gameOverStatus:
+            self.menu.updateHighScore(self.game.score)
             self.keyboard.menu = True
             self.game = Game(1200,800)
             self.game.newRound(1)
@@ -85,6 +86,7 @@ class Interaction:
                     if(enemy.health <= 0):
                         self.addProjlessExplosion(enemy.pos)
                         self.game.enemies.remove(enemy)
+                        self.game.score += 2
         for trail in self.trails:
             if(trail.isFinished()):
                 self.trails.remove(trail)
@@ -112,7 +114,27 @@ class Interaction:
                 
     def drawHandler(self, canvas):
         if self.keyboard.menu:
-            self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT)
+            self.menu.drawMenu(canvas, self.keyboard.showControls, WIDTH, HEIGHT, self.keyboard.showHighScore)
+            if (400 < simplegui.pygame.mouse.get_pos()[0] < 550 and 530 < simplegui.pygame.mouse.get_pos()[1] < 580):
+                isPressed = simplegui.pygame.mouse.get_pressed()[0]
+                if (isPressed == 1):
+                    if (self.keyboard.showHighScore):
+                        self.keyboard.showHighScore = False
+                    else:
+                        self.keyboard.showHighScore = True
+
+            if (780 < simplegui.pygame.mouse.get_pos()[0] < 930 and 530 < simplegui.pygame.mouse.get_pos()[1] < 580):
+                isPressed = simplegui.pygame.mouse.get_pressed()[0]
+                if (isPressed == 1):
+                    if (self.keyboard.showControls):
+                        self.keyboard.showControls = False
+                    else:
+                        self.keyboard.showControls = True
+            if (1150 < simplegui.pygame.mouse.get_pos()[0] < 1300 and 530 < simplegui.pygame.mouse.get_pos()[1] < 580):
+                isPressed = simplegui.pygame.mouse.get_pressed()[0]
+                if (isPressed == 1):
+                    self.keyboard.menu = False
+
             return
         if not self.keyboard.p:
             self.update()
@@ -213,6 +235,7 @@ class Keyboard:
         self.p = False
         self.menu = True
         self.showControls = False
+        self.showHighScore = False
 
     def keyDown(self, key):
         if(key == simplegui.KEY_MAP['w']):
@@ -242,6 +265,7 @@ class Keyboard:
             self.p = not self.p
         elif(key == simplegui.KEY_MAP['c']):
             self.showControls = not self.showControls
+
 
 game = Game(1200, 800)
 i = Interaction(Keyboard(), game)
