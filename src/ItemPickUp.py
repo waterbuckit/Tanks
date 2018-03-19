@@ -59,7 +59,7 @@ class ItemPickUp():
         print(player.shieldStatus)
 
     def loadHoming(self, player):
-        player.homingCount += self.radius/3
+        player.homingCount += int(round(self.radius/3))
 
     def loadAmmo(self, type):
         if type == 'AP':

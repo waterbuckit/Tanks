@@ -50,4 +50,4 @@ class Game:
     def drawInfo(self, canvas):
         canvas.draw_text("ROUND: " + str(self.roundCount), (10, 20), 20, "White")
         canvas.draw_text("LIVES: " + str(self.roundLives), (10, 40), 20, "White")
-        canvas.draw_text("MISSILES: " + str(int(self.player.homingCount)), (10, 60), 20, "White")
+        canvas.draw_text("MISSILES: " + str(self.player.homingCount), (10, 60), 20, "White")
