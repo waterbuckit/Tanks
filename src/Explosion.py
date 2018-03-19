@@ -36,7 +36,6 @@ class Explosion:
 
     def draw(self, canvas):
         for particle in range(len(self.particles)):
-            #print("DRAWN particle no.: " + str(particle)+ " at " + str(self.particles[particle].pos.getP()))
             self.particles[particle].draw(canvas)
 
 class Particle:

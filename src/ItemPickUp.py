@@ -38,7 +38,6 @@ class ItemPickUp():
             player.health += 50
             if player.health > player.maxHealth:
                 player.health = player.maxHealth
-        print(player.health)
 
     def applyShield(self, player):
         if self.radius == ItemPickUp.sizes[0]:
@@ -53,7 +52,6 @@ class ItemPickUp():
             player.shieldStatus += 50
             if player.shieldStatus > player.maxHealth:
                 player.shieldStatus = player.maxHealth
-        print(player.shieldStatus)
 
     def loadAmmo(self, player):
         if self.radius == ItemPickUp.sizes[0]:
@@ -62,7 +60,6 @@ class ItemPickUp():
             player.homingAmmo += 2
         elif self.radius == ItemPickUp.sizes[2]:
             player.homingAmmo += 3
-        print(player.homingAmmo)
     
     def update(self):
         self.counter += 0.1
