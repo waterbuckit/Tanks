@@ -16,7 +16,7 @@ class Game:
         self.terrain = None
         self.player = None
         self.gameOverStatus = False
-        self.roundLives = 3
+        self.roundLives = 0
 
     def newRound(self, enemyCount):
         self.enemies.clear()
