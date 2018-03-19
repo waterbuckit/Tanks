@@ -3,6 +3,7 @@
 #░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀
 
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+import SimpleGUICS2Pygame.codeskulptor_lib as simpleguiUtils
 from Vector import Vector
 from Game import Game
 from Tank import Tank
@@ -136,7 +137,12 @@ class Interaction:
         self.pauseCounter %= 100
         canvas.draw_circle((WIDTH/2,HEIGHT/2), 
                 Util.toRange(math.sin(self.pauseCounter),-1,1,0,100),1,
-                "#accaf9", "#accaf9")
+                simpleguiUtils.hsla(211, 100, 62,
+                    Util.toRange(math.sin(self.pauseCounter)
+                    ,-1,1,0,100)/100),
+                simpleguiUtils.hsla(211, 100, 62,
+                    Util.toRange(math.sin(self.pauseCounter)
+                    ,-1,1,0,100)/100))
 
     def handleGameWin(self): 
         # Clear all the lists
