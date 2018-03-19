@@ -1,5 +1,6 @@
 from Line import *
 from Tank import *
+from ItemPickUp import ItemPickUp
 import SimpleGUICS2Pygame.codeskulptor_lib as simpleguiUtils
 import math
 
@@ -61,7 +62,7 @@ class PlayerTank(Tank):
             self.health -= 3
 
     def pickUpItem(self, item):
-        if((self.pos - item.pos).length() <= item.radius*2):
+        if((self.pos - item.pos).length() <= self.defRadius + ItemPickUp.sizes[2]):
             item.pickupAction(self)
             return True
 

@@ -55,9 +55,6 @@ class ItemPickUp():
                 player.shieldStatus = player.maxHealth
         print(player.shieldStatus)
 
-    def loadHoming(self, player):
-        player.homingCount += self.radius//3
-
     def loadAmmo(self, player):
         if self.radius == ItemPickUp.sizes[0]:
             player.homingAmmo += 1

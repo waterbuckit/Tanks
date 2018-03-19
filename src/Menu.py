@@ -2,7 +2,7 @@ import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
 import os.path
 
-filename = os.path.join(os.path.dirname('__file__'), 'HighScores.txt')
+filename = os.path.dirname(os.path.realpath(__file__)) + os.sep + 'HighScores.txt'
 
 class Menu:
 
@@ -73,7 +73,7 @@ class Menu:
         highscores = [int(x) for x in highscores]
         highscores.append(score)
 
-        with open("HighScores.txt", 'w') as f:
+        with open(filename, 'w') as f:
             for i in highscores:
                 f.write("%s\n" % i)
 
