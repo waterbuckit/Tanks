@@ -11,12 +11,13 @@ class PlayerTank(Tank):
         Tank.__init__(self, pos, game)
         self.mousePos = (0,0)
         self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
-        self.turret = PlayerTurret(self, pos)
+        self.turret = PlayerTurret(self, pos, self)
         self.counter = 100
         self.shieldStatus = 100
         self.shield = Shield(self)
         self.maxHealth = 100
         self.isColliding = False
+        self.homingAmmo = 0
     
     def recoil(self, shot):
         vel = shot.vel.copy().normalize()*-2
@@ -156,9 +157,10 @@ class ShieldHitmark:
 
 class PlayerTurret(Turret):
 
-    def __init__(self, base, pos):
+    def __init__(self, base, pos, playerTank):
         Turret.__init__(self, base, pos)
-    
+        self.playerTank = playerTank
+
     def shoot(self, clickedVel, type):
         targetVel = (clickedVel-self.getMuzzlePos()).normalize()
         if(not self.base.readyToFire) or (self.pos - clickedVel).length() < self.generator.length(): return
@@ -166,9 +168,11 @@ class PlayerTurret(Turret):
             shot = Projectile(self.getMuzzlePos(), targetVel, self.projectileSpeed, "shell", (self.pos-clickedVel).length())
             self.base.recoil(shot)
         elif type == "homing":
-            if self.base.homingCount <= 0: return
+            if self.playerTank.homingAmmo <= 0:
+                print("No homing ammo!")
+                return
             shot = HomingProjectile(self.getMuzzlePos(), targetVel)
-            self.base.homingCount -= 1
+            self.playerTank.homingAmmo -= 1
         self.base.readyToFire = False
         self.base.reloadCounter = 0
         return shot

@@ -22,11 +22,8 @@ class ItemPickUp():
            self.applyHealth(player)
        elif self.type == "shieldStatus":
            self.applyShield(player)
-       elif self.type == "ammo":
-           #self.loadAmmo()
-           pass
        elif self.type == "missile":
-            self.loadHoming(player)
+           self.loadAmmo(player)
 
     def applyHealth(self, player):
         if self.radius == ItemPickUp.sizes[0]:
@@ -61,16 +58,14 @@ class ItemPickUp():
     def loadHoming(self, player):
         player.homingCount += self.radius//3
 
-    def loadAmmo(self, type):
-        if type == 'AP':
-            self.damage = 50
-            self.ammo= 5
-        elif type == 'AtomBomb':
-            self.damage = 500
-            self.ammo = 1
-        else:
-            self.damage = 10
-            self.ammo = -1
+    def loadAmmo(self, player):
+        if self.radius == ItemPickUp.sizes[0]:
+            player.homingAmmo += 1
+        elif self.radius == ItemPickUp.sizes[1]:
+            player.homingAmmo += 2
+        elif self.radius == ItemPickUp.sizes[2]:
+            player.homingAmmo += 3
+        print(player.homingAmmo)
     
     def update(self):
         self.counter += 0.1
