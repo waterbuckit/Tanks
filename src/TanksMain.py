@@ -54,6 +54,7 @@ class Interaction:
             enemy.update(self.game.player)
             self.addProjectile(enemy, "shell", enemy.turret.aim(self.game.player))
         for item in self.game.terrain.pickupItems:
+            item.update()
             if self.game.player.pickUpItem(item):
                 self.game.terrain.pickupItems.remove(item)
         for projectile in self.projectiles:

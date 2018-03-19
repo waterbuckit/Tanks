@@ -1,5 +1,8 @@
 from Tank import Tank
+import Util
 import random
+import math
+import SimpleGUICS2Pygame.codeskulptor_lib as simplegui
 
 class ItemPickUp():
 
@@ -11,6 +14,8 @@ class ItemPickUp():
         self.radius = random.choice(ItemPickUp.sizes)
         self.pos = pos
         self.game = game
+        self.lineThickness = 2
+        self.counter = 10
 
     def pickupAction(self, player):
        if self.type == "health":
@@ -66,6 +71,13 @@ class ItemPickUp():
         else:
             self.damage = 10
             self.ammo = -1
+    
+    def update(self):
+        self.counter += 0.1
+        self.counter %= 100
+        self.lineThickness = int(Util.toRange(math.sin(self.counter), -1, 1, 1, 3))
+        self.lineColor = simplegui.hsla(0, 100,100, 
+                Util.toRange(math.sin(self.counter), -1, 1, 0.0, 1.0))
 
     def draw(self, canvas, color):
-        canvas.draw_circle(self.pos.getP(), self.radius, self.radius, color, color)
+        canvas.draw_circle(self.pos.getP(), self.radius, self.lineThickness, self.lineColor, color)
