@@ -1,11 +1,15 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 from Vector import Vector
+import os.path
+
+filename = os.path.join(os.path.dirname('__file__'), 'HighScores.txt')
 
 class Menu:
+
     def __init__(self):
         pass
-
     def drawMenu(self, canvas, showControls, WIDTH, HEIGHT, highscore, isStartselected, isControlSelected, isHighSelected):
+
         canvas.draw_text("Tanks", (WIDTH / 2 - 70, HEIGHT / 2 - 50), 60, "White")
         if (isStartselected):
             canvas.draw_polygon([(900, 500), (900, 550), (1100, 550), (1100, 500)], 20, "Lime", "Lime")
@@ -31,7 +35,7 @@ class Menu:
         if (highscore == True):
             canvas.draw_polygon([(100, 0), (100, 430), (300, 430), (300, 0)], 20, "Black", "Grey")
             canvas.draw_text("Top 10 Scores", (160, 50), 20, "Black")
-            with open("HighScores.txt", 'r') as f:
+            with open(filename, 'r') as f:
                 highscores = f.readlines()
             highscores = [x.strip() for x in highscores]
             highscores = [int(x) for x in highscores]
@@ -63,7 +67,7 @@ class Menu:
 
 
     def updateHighScore(self, score):
-        with open("HighScores.txt", 'r') as f:
+        with open(filename, 'r') as f:
             highscores = f.readlines()
         highscores = [x.strip() for x in highscores]
         highscores = [int(x) for x in highscores]
