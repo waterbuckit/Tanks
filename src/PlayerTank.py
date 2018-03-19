@@ -168,7 +168,6 @@ class PlayerTurret(Turret):
             self.base.recoil(shot)
         elif type == "homing":
             if self.playerTank.homingAmmo <= 0:
-                print("No homing ammo!")
                 return
             shot = HomingProjectile(self.getMuzzlePos(), targetVel)
             self.playerTank.homingAmmo -= 1
