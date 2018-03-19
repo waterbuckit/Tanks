@@ -24,20 +24,20 @@ class Interaction:
     menu = Menu()
     
     def __init__(self, keyboard, game):
-       self.game = game
-       self.game.newRound(1)
-       self.keyboard = keyboard
-       self.projectiles = []
-       self.explosions = []
-       self.trails = []
-       self.currentlyColliding = {}
-       self.pauseCounter = 100
-       self.isPaused = False
-       self.setMappings()
-       self.mousePos = self.game.player.pos
-       for line in self.game.terrain.lines:
-           self.currentlyColliding[(self.game.player, line)] = False
-
+        self.game = game
+        self.game.newRound(1)
+        self.keyboard = keyboard
+        self.projectiles = []
+        self.explosions = []
+        self.trails = []
+        self.currentlyColliding = {}
+        self.pauseCounter = 100
+        self.isPaused = False
+        self.setMappings()
+        self.mousePos = self.game.player.pos
+        for line in self.game.terrain.lines:
+            self.currentlyColliding[(self.game.player, line)] = False
+        self.cursor = simplegui.load_image('https://i.imgur.com/GYXjv5a.png')
     def update(self):
         if self.game.gameOverStatus:
             self.menu.updateHighScore(self.game.score)
