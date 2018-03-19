@@ -117,7 +117,6 @@ class Shield:
                 self.shieldHitmarks.remove(hitmark)
 
     def draw(self, canvas):
-        canvas.draw_circle((self.base.pos.x, self.base.pos.y), self.shieldRadius, 2, '#d9dadb')
         for hitmark in self.shieldHitmarks:
             hitmark.draw(canvas)
 
